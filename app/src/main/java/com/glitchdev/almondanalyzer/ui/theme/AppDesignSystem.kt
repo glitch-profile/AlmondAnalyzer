@@ -29,21 +29,22 @@ data class AppColorsScheme(
     private fun animateColor(targetColor: Color) = animateColorAsState(
         targetValue = targetColor,
         animationSpec = tween(durationMillis = 300)
-    )
+    ).value
 
+    @Composable
     fun switch() = copy(
-        background = background,
-        primary = primary,
-        primaryVariant = primaryVariant,
-        onPrimary = onPrimary,
-        onPrimaryVariant = onPrimaryVariant,
-        label = label,
-        surface = surface,
-        onSurface = onSurface,
-        onSurfaceVariant = onSurfaceVariant,
-        outline = outline,
-        notation = notation,
-        onNotation = onNotation
+        background = animateColor(background),
+        primary = animateColor(primary),
+        primaryVariant = animateColor(primaryVariant),
+        onPrimary = animateColor(onPrimary),
+        onPrimaryVariant = animateColor(onPrimary),
+        label = animateColor(label),
+        surface = animateColor(surface),
+        onSurface = animateColor(onSurface),
+        onSurfaceVariant = animateColor(onSurfaceVariant),
+        outline = animateColor(outline),
+        notation = animateColor(notation),
+        onNotation = animateColor(onNotation)
     )
 
 }
