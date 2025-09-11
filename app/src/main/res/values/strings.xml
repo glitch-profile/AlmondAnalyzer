@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Almond Analyzer</string>
+
+    <!-- SCREEN TITLES -->
+    <string name="recents_screen_title">Recents</string>
+    <string name="analyze_screen_title">Analyze</string>
 </resources>
