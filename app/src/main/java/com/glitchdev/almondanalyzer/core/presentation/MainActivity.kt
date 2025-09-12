@@ -28,6 +28,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -39,6 +40,9 @@ import com.glitchdev.almondanalyzer.core.utils.ScreenRoutes
 import com.glitchdev.almondanalyzer.ui.components.AppSurface
 import com.glitchdev.almondanalyzer.ui.theme.AlmondAnalyzerTheme
 import com.glitchdev.almondanalyzer.ui.theme.AppTheme
+import com.glitchdev.almondanalyzer.uploadscreen.presentation.UploadScreen
+import com.glitchdev.almondanalyzer.uploadscreen.presentation.UploadScreenViewModel
+import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalLayoutApi::class)
 class MainActivity : ComponentActivity() {
@@ -140,7 +144,8 @@ private fun ScreensContent(
     ) {
         navigation<ScreenRoutes.RecentsNavGraph>(startDestination = ScreenRoutes.RecentImagesScreen) {
             composable<ScreenRoutes.RecentImagesScreen> {
-
+                val uploadScreenViewModel: UploadScreenViewModel = koinViewModel()
+                UploadScreen()
             }
         }
         navigation<ScreenRoutes.AnalyzeImageNavGraph>(startDestination = ScreenRoutes.UploadImageScreen) {
