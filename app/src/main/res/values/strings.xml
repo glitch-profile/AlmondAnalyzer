@@ -4,4 +4,11 @@
     <!-- SCREEN TITLES -->
     <string name="recents_screen_title">Recents</string>
     <string name="analyze_screen_title">Analyze</string>
+
+    <!-- UPLOAD IMAGE SCREEN -->
+    <!-- CAMERA COMPONENT -->
+    <string name="upload_image_camera_component_camera_not_ready_title">Camera unavailable</string>
+    <string name="upload_image_camera_component_no_permissions_text">Provide camera\'s permission</string>
+    <string name="upload_image_camera_component_camera_ready_title">Camera is ready</string>
+    <string name="upload_image_camera_component_camera_ready_text">Open in fullscreen mode</string>
 </resources>

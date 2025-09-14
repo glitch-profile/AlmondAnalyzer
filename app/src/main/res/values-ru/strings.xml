@@ -5,4 +5,11 @@
     <!-- SCREEN TITLES -->
     <string name="recents_screen_title">История</string>
     <string name="analyze_screen_title">Анализ</string>
+
+    <!-- UPLOAD IMAGE SCREEN -->
+    <!-- CAMERA COMPONENT -->
+    <string name="upload_image_camera_component_camera_not_ready_title">Камера недоступна</string>
+    <string name="upload_image_camera_component_no_permissions_text">Предоставить доступ к камере</string>
+    <string name="upload_image_camera_component_camera_ready_title">Камера готова</string>
+    <string name="upload_image_camera_component_camera_ready_text">Развернуть на весь экран</string>
 </resources>

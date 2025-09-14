@@ -12,8 +12,7 @@ import androidx.compose.ui.Modifier
 @Composable
 fun CameraPreview(
     modifier: Modifier = Modifier,
-    surfaceRequest: SurfaceRequest?,
-    placeholder: @Composable (() -> Unit)? = null
+    surfaceRequest: SurfaceRequest?
 ) {
     Box(
         modifier = modifier,
@@ -24,10 +23,8 @@ fun CameraPreview(
                 modifier = Modifier
                     .fillMaxSize(),
                 surfaceRequest = surfaceRequest,
-                implementationMode = ImplementationMode.EXTERNAL
+                implementationMode = ImplementationMode.EMBEDDED
             )
-        } else {
-            placeholder?.invoke()
         }
     }
 }

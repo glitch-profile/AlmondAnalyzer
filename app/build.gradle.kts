@@ -33,12 +33,12 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_23
+        targetCompatibility = JavaVersion.VERSION_23
     }
     kotlin {
         compilerOptions {
-            jvmTarget = JvmTarget.JVM_11
+            jvmTarget = JvmTarget.JVM_23
         }
     }
     buildFeatures {
@@ -70,7 +70,6 @@ dependencies {
     implementation(libs.androidx.camera.compose)
     implementation(libs.androidx.camera.lifecycle)
     implementation(libs.androidx.camera.camera2)
-//    implementation(libs.androidx.camera.view)
     //ktor
     implementation(libs.ktor.client.core)
     implementation(libs.ktor.client.okhttp)

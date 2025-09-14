@@ -25,10 +25,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
-import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -145,7 +146,11 @@ private fun ScreensContent(
         navigation<ScreenRoutes.RecentsNavGraph>(startDestination = ScreenRoutes.RecentImagesScreen) {
             composable<ScreenRoutes.RecentImagesScreen> {
                 val uploadScreenViewModel: UploadScreenViewModel = koinViewModel()
-                UploadScreen()
+                val cameraState by uploadScreenViewModel.cameraState.collectAsState()
+                UploadScreen(
+                    cameraState = cameraState,
+                    onUpdateCameraState = uploadScreenViewModel::updateState
+                )
             }
         }
         navigation<ScreenRoutes.AnalyzeImageNavGraph>(startDestination = ScreenRoutes.UploadImageScreen) {

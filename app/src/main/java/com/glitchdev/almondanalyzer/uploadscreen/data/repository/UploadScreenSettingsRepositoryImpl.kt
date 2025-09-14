@@ -2,8 +2,8 @@ package com.glitchdev.almondanalyzer.uploadscreen.data.repository
 
 import android.content.Context
 import android.content.SharedPreferences
-import com.glitchdev.almondanalyzer.uploadscreen.domain.repository.UploadScreenSettingsRepository
 import androidx.core.content.edit
+import com.glitchdev.almondanalyzer.uploadscreen.domain.repository.UploadScreenSettingsRepository
 
 private const val PREFERENCE_NAME = "UploadScreenSettings"
 private const val CAMERA_SETUP_KEY = "IsCameraSetupComplete"
