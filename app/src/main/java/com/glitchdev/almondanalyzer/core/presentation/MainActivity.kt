@@ -149,7 +149,9 @@ private fun ScreensContent(
                 val cameraState by uploadScreenViewModel.cameraState.collectAsState()
                 UploadScreen(
                     cameraState = cameraState,
-                    onUpdateCameraState = uploadScreenViewModel::updateState
+                    onUpdateCameraPermissions = uploadScreenViewModel::onUpdateCameraPermissions,
+                    onUpdateCameraFullscreenMode = uploadScreenViewModel::onUpdateCameraFullscreenMode,
+                    onSwitchSelectedCamera = uploadScreenViewModel::onUpdateSelectedCamera,
                 )
             }
         }

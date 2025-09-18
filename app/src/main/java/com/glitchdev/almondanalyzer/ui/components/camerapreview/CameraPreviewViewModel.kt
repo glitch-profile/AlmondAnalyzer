@@ -12,10 +12,12 @@ import androidx.camera.lifecycle.awaitInstance
 import androidx.compose.ui.geometry.Offset
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.awaitCancellation
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 class CameraPreviewViewModel: ViewModel() {
     private val _surfaceRequests = MutableStateFlow<SurfaceRequest?>(null)
@@ -39,21 +41,16 @@ class CameraPreviewViewModel: ViewModel() {
         context: Context,
         lifecycleOwner: LifecycleOwner,
         isUseBackCamera: Boolean = true,
-        onBindComplete: (() -> Unit)? = null
     ) {
-        val localCameraProvider = cameraProvider ?: kotlin.run {
-            val camera = ProcessCameraProvider.awaitInstance(context)
-            cameraProvider = camera
-            cameraProvider
-        }
-        val camera = localCameraProvider!!.bindToLifecycle(
+        cameraProvider = ProcessCameraProvider.awaitInstance(context)
+        val camera = cameraProvider!!.bindToLifecycle(
             lifecycleOwner = lifecycleOwner,
             cameraSelector = if (isUseBackCamera) CameraSelector.DEFAULT_BACK_CAMERA
                 else CameraSelector.DEFAULT_FRONT_CAMERA,
             cameraPreviewUseCase
         )
         cameraControl = camera.cameraControl
-        onBindComplete?.invoke()
+
         // await cancellation
         try {
             awaitCancellation()

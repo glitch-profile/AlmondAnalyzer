@@ -7,11 +7,34 @@ import kotlinx.coroutines.flow.update
 
 class UploadScreenViewModel: ViewModel() {
 
-    private val _cameraState = MutableStateFlow<CameraComponentState>(CameraComponentState.INITIALIZING)
+    private val _cameraState = MutableStateFlow<CameraComponentState>(CameraComponentState())
     val cameraState = _cameraState.asStateFlow()
 
-    fun updateState(state: CameraComponentState) {
-        _cameraState.update { state }
+    fun onUpdateCameraPermissions(isPermissionsGranted: Boolean) {
+        _cameraState.update {
+            if (isPermissionsGranted) {
+                it.copy(
+                    cameraStatus = CameraStatusState.READY
+                )
+            } else {
+                it.copy(
+                    cameraStatus = CameraStatusState.NO_PERMISSIONS,
+                    isExpanded = false
+                )
+            }
+        }
+    }
+
+    fun onUpdateCameraFullscreenMode(isCameraExpanded: Boolean) {
+        if (cameraState.value.cameraStatus == CameraStatusState.READY) {
+            _cameraState.update { it.copy(isExpanded = isCameraExpanded) }
+        }
+    }
+
+    fun onUpdateSelectedCamera(isBackCameraSelected: Boolean) {
+        if (cameraState.value.cameraStatus == CameraStatusState.READY) {
+            _cameraState.update { it.copy(isBackCamera = isBackCameraSelected) }
+        }
     }
 
 }

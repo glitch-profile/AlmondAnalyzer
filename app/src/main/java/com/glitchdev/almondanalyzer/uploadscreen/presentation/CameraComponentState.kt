@@ -7,5 +7,5 @@ data class CameraComponentState(
 )
 
 enum class CameraStatusState {
-    INITIALIZING, NO_PERMISSIONS, LOADING, READY
+    INITIALIZING, NO_PERMISSIONS, READY
 }
