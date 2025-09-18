@@ -38,12 +38,18 @@ class CameraPreviewViewModel: ViewModel() {
     suspend fun bindToCamera(
         context: Context,
         lifecycleOwner: LifecycleOwner,
+        isUseBackCamera: Boolean = true,
         onBindComplete: (() -> Unit)? = null
     ) {
-        cameraProvider = ProcessCameraProvider.awaitInstance(context)
-        val camera = cameraProvider!!.bindToLifecycle(
+        val localCameraProvider = cameraProvider ?: kotlin.run {
+            val camera = ProcessCameraProvider.awaitInstance(context)
+            cameraProvider = camera
+            cameraProvider
+        }
+        val camera = localCameraProvider!!.bindToLifecycle(
             lifecycleOwner = lifecycleOwner,
-            cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA,
+            cameraSelector = if (isUseBackCamera) CameraSelector.DEFAULT_BACK_CAMERA
+                else CameraSelector.DEFAULT_FRONT_CAMERA,
             cameraPreviewUseCase
         )
         cameraControl = camera.cameraControl

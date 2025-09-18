@@ -1,13 +1,16 @@
 package com.glitchdev.almondanalyzer.uploadscreen.presentation
 
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
+import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -17,7 +20,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -32,14 +37,21 @@ import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.glitchdev.almondanalyzer.R
+import com.glitchdev.almondanalyzer.ui.components.AppButtonDefaults
+import com.glitchdev.almondanalyzer.ui.components.AppIconButton
 import com.glitchdev.almondanalyzer.ui.components.camerapreview.CameraPreview
 import com.glitchdev.almondanalyzer.ui.components.camerapreview.CameraPreviewViewModel
 import com.glitchdev.almondanalyzer.ui.icons.AppIcons
 import com.glitchdev.almondanalyzer.ui.icons.svgs.Camera
 import com.glitchdev.almondanalyzer.ui.icons.svgs.CameraUnavailable
+import com.glitchdev.almondanalyzer.ui.icons.svgs.Camerafilled
+import com.glitchdev.almondanalyzer.ui.icons.svgs.Clear
+import com.glitchdev.almondanalyzer.ui.icons.svgs.Upload
 import com.glitchdev.almondanalyzer.ui.theme.AppTheme
+import com.glitchdev.almondanalyzer.ui.theme.appSpringDefault
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -59,19 +71,22 @@ fun CameraComponent(
     val surfaceRequest by cameraViewModel.surfaceRequests.collectAsState()
 
     val cameraTintAlpha by animateFloatAsState(
-        targetValue = when (state) {
-            CameraComponentState.NO_PERMISSIONS -> 1f
-            CameraComponentState.INITIALIZING -> 1f
-            CameraComponentState.COMPACT -> 0.8f
-            CameraComponentState.EXPANDED -> 0f
+        targetValue = if (state.isExpanded)
+            0f
+        else {
+            when (state.cameraStatus) {
+                CameraStatusState.READY -> 0.8f
+                else -> 1f
+            }
         },
-        animationSpec = spring(stiffness = Spring.StiffnessMedium)
+        animationSpec = appSpringDefault()
     )
 
     LaunchedEffect(lifecycleOwner) {
         cameraViewModel.bindToCamera(
             context = context.applicationContext,
-            lifecycleOwner = lifecycleOwner
+            lifecycleOwner = lifecycleOwner,
+            isUseBackCamera = state.isBackCamera
         )
     }
 
@@ -79,12 +94,79 @@ fun CameraComponent(
         modifier = modifier
             .clipToBounds()
     ) {
-        if (state != CameraComponentState.NO_PERMISSIONS && state != CameraComponentState.INITIALIZING) {
+        if (state.cameraStatus == CameraStatusState.READY) {
             CameraPreview(
                 modifier = Modifier
                     .fillMaxSize(),
                 surfaceRequest = surfaceRequest
             )
+        }
+
+        AnimatedVisibility(
+            visible = state.isExpanded,
+            enter = expandVertically(appSpringDefault()) + fadeIn(appSpringDefault()),
+            exit = shrinkVertically(appSpringDefault()) + fadeOut(appSpringDefault()),
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .fillMaxWidth()
+                .padding(bottom = AppTheme.size.large)
+        ) {
+            val sideButtonsColor = AppButtonDefaults.textButtonColors().copy(
+                containerColor = AppTheme.colorScheme.surface.copy(alpha = 0.6f),
+                contentColor = AppTheme.colorScheme.onSurfaceVariant
+            )
+            val mainButtonColor = AppButtonDefaults.textButtonColors().copy(
+                containerColor = AppTheme.colorScheme.surface.copy(alpha = 0.8f),
+                contentColor = AppTheme.colorScheme.onSurface
+            )
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
+            ) {
+//                Spacer(Modifier.weight(1f))
+                AppIconButton(
+                    modifier = Modifier
+                        .size(56.dp),
+                    onClick = onCollapseClicked,
+                    colors = sideButtonsColor
+                ) {
+                    Icon(
+                        imageVector = AppIcons.Clear,
+                        contentDescription = null
+                    )
+                }
+                Spacer(Modifier.width(32.dp))
+//                Spacer(Modifier.weight(1f))
+                AppIconButton(
+                    modifier = Modifier
+                        .size(64.dp),
+                    onClick = { onPhotoTaken.invoke("") },
+                    colors = mainButtonColor
+                ) {
+                    Icon(
+                        imageVector = AppIcons.Camerafilled,
+                        contentDescription = null
+                    )
+                }
+//                Spacer(Modifier.weight(1f))
+                Spacer(Modifier.width(32.dp))
+                AppIconButton(
+                    modifier = Modifier
+                        .size(56.dp),
+                    onClick = { println("switching camera") },
+                    colors = sideButtonsColor
+                ) {
+                    Icon(
+                        imageVector = AppIcons.Upload,
+                        contentDescription = null
+                    )
+                }
+//                Spacer(Modifier.weight(1f))
+            }
         }
 
         if (cameraTintAlpha != 0f) {
@@ -94,20 +176,21 @@ fun CameraComponent(
                     .alpha(cameraTintAlpha)
                     .background(AppTheme.colorScheme.surface)
                     .clickable(
-                        enabled = state != CameraComponentState.INITIALIZING,
+                        enabled = state.cameraStatus != CameraStatusState.INITIALIZING && !state.isExpanded,
                         interactionSource = null,
                         onClick = {
-                            when (state) {
-                                CameraComponentState.NO_PERMISSIONS -> onNoPermissionClicked.invoke()
-                                CameraComponentState.COMPACT -> onExpandClicked.invoke()
-                                CameraComponentState.EXPANDED -> onCollapseClicked.invoke()
+                            when (state.cameraStatus) {
+                                CameraStatusState.NO_PERMISSIONS -> onNoPermissionClicked.invoke()
+                                CameraStatusState.READY -> {
+                                    if (!state.isExpanded) onExpandClicked.invoke()
+                                }
                                 else -> Unit
                             }
                         }
                     )
             ) {
                 Crossfade(
-                    targetState = state != CameraComponentState.INITIALIZING,
+                    targetState = state.cameraStatus != CameraStatusState.INITIALIZING,
                     animationSpec = spring(stiffness = Spring.StiffnessMedium)
                 ) { isCameraReady ->
                     if (isCameraReady) {
@@ -119,8 +202,8 @@ fun CameraComponent(
                             horizontalArrangement = Arrangement.Center
                         ) {
                             Crossfade(
-                                targetState = state == CameraComponentState.NO_PERMISSIONS,
-                                animationSpec = spring(stiffness = Spring.StiffnessMedium)
+                                targetState = state.cameraStatus == CameraStatusState.NO_PERMISSIONS,
+                                animationSpec = appSpringDefault()
                             ) { isCameraUnavailable ->
                                 if (isCameraUnavailable) {
                                     Icon(
@@ -139,13 +222,12 @@ fun CameraComponent(
                             Spacer(Modifier.width(AppTheme.size.small))
                             Column(
                                 modifier = Modifier
-                                    .animateContentSize(animationSpec = spring(stiffness = Spring.StiffnessMedium))
+                                    .animateContentSize(appSpringDefault())
                             ) {
                                 AnimatedContent(
-                                    targetState = state == CameraComponentState.NO_PERMISSIONS,
+                                    targetState = state.cameraStatus == CameraStatusState.NO_PERMISSIONS,
                                     transitionSpec = {
-                                        (fadeIn(spring(stiffness = Spring.StiffnessMedium))
-                                                togetherWith fadeOut(spring(stiffness = Spring.StiffnessMedium)))
+                                        fadeIn(appSpringDefault()) togetherWith fadeOut(appSpringDefault())
                                     }
                                 ) { isCameraUnavailable ->
                                     if (isCameraUnavailable) {
@@ -167,10 +249,9 @@ fun CameraComponent(
                                     }
                                 }
                                 AnimatedContent(
-                                    targetState = state == CameraComponentState.NO_PERMISSIONS,
+                                    targetState = state.cameraStatus == CameraStatusState.NO_PERMISSIONS,
                                     transitionSpec = {
-                                        (fadeIn(spring(stiffness = Spring.StiffnessMedium))
-                                                togetherWith fadeOut(spring(stiffness = Spring.StiffnessMedium)))
+                                        fadeIn(appSpringDefault()) togetherWith fadeOut(appSpringDefault())
                                     }
                                 ) { isCameraUnavailable ->
                                     if (isCameraUnavailable) {
