@@ -30,6 +30,7 @@ fun UploadScreen(
     cameraState: CameraComponentState,
     onUpdateCameraPermissions: (isPermissionGranted: Boolean) -> Unit,
     onUpdateCameraFullscreenMode: (isExpanded: Boolean) -> Unit,
+    onUpdateCameraStreamStatus: (isAvailable: Boolean) -> Unit,
     onSwitchSelectedCamera: (isBackCamera: Boolean) -> Unit
 ) {
     val context = LocalContext.current
@@ -78,6 +79,7 @@ fun UploadScreen(
                 onExpandButtonClicked = { onUpdateCameraFullscreenMode.invoke(true) },
                 onCollapseButtonClicked = { onUpdateCameraFullscreenMode.invoke(false) },
                 onSwitchCameraButtonClicked = { onSwitchSelectedCamera.invoke(!cameraState.isBackCamera) },
+                onUpdateCameraStreamStatus = onUpdateCameraStreamStatus,
                 onPhotoTaken = { println("photo taken") },
             )
         }

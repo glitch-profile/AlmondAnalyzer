@@ -152,6 +152,7 @@ private fun ScreensContent(
                     onUpdateCameraPermissions = uploadScreenViewModel::onUpdateCameraPermissions,
                     onUpdateCameraFullscreenMode = uploadScreenViewModel::onUpdateCameraFullscreenMode,
                     onSwitchSelectedCamera = uploadScreenViewModel::onUpdateSelectedCamera,
+                    onUpdateCameraStreamStatus = uploadScreenViewModel::onUpdateCameraStreamAvailability
                 )
             }
         }

@@ -16,7 +16,7 @@ android {
         minSdk = 29
         targetSdk = 36
         versionCode = 1
-        versionName = "0.0.1"
+        versionName = "0.1.3"
         androidResources.localeFilters.addAll(listOf("en", "ru"))
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -67,7 +67,7 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
     //camerax
     implementation(libs.androidx.camera.core)
-    implementation(libs.androidx.camera.compose)
+    implementation(libs.androidx.camera.view)
     implementation(libs.androidx.camera.lifecycle)
     implementation(libs.androidx.camera.camera2)
     //ktor

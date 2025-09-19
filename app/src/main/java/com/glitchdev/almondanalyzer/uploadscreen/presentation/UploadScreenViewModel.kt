@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.update
 
 class UploadScreenViewModel: ViewModel() {
 
-    private val _cameraState = MutableStateFlow<CameraComponentState>(CameraComponentState())
+    private val _cameraState = MutableStateFlow(CameraComponentState())
     val cameraState = _cameraState.asStateFlow()
 
     fun onUpdateCameraPermissions(isPermissionsGranted: Boolean) {
@@ -35,6 +35,10 @@ class UploadScreenViewModel: ViewModel() {
         if (cameraState.value.cameraStatus == CameraStatusState.READY) {
             _cameraState.update { it.copy(isBackCamera = isBackCameraSelected) }
         }
+    }
+
+    fun onUpdateCameraStreamAvailability(isAvailable: Boolean) {
+        _cameraState.update { it.copy(isCameraStreamAvailable = isAvailable) }
     }
 
 }
