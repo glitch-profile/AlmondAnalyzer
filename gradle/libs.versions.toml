@@ -13,13 +13,16 @@ camerax = "1.5.0-rc01"
 koinBom = "4.1.1"
 ktor = "3.2.3"
 coil = "3.3.0"
+room = "2.8.0"
 firebaseBom = "33.12.0"
 #plugins versions
 googleServices = "4.4.2"
 ksp = "2.2.10-2.0.2"
+coreKtxVersion = "1.7.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-room-runtime = { module = "androidx.room:room-runtime" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
@@ -60,6 +63,10 @@ coil-ktor = { group = "io.coil-kt.coil3", name = "coil-network-ktor3", version.r
 #firebase
 #firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebaseBom" }
 #firebase-messaging = { group = "com.google.firebase", name = "firebase-messaging"}
+room-runtime = { module = "androidx.room:room-runtime", version = "2.8.0" }
+room-ktx     = { module = "androidx.room:room-ktx", version.ref = "room" }
+room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
+core-ktx = { group = "androidx.test", name = "core-ktx", version.ref = "coreKtxVersion" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
