@@ -1,0 +1,11 @@
+class RepositoryProvider(context: Context) {
+
+    private val db = Room.databaseBuilder(
+        context,
+        AppDatabase::class.java,
+        "almond_analyzer.db"
+    ).build()
+
+    val fieldRepository = FieldRepository(FieldStorage(db.fieldDao()))
+    val expenseRepository = ExpenseRepository(ExpenseStorage(db.expenseDao()))
+}

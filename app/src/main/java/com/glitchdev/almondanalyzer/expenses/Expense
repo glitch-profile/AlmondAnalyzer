@@ -1,0 +1,8 @@
+@Entity(tableName = "expenses")
+data class Expense(
+    @PrimaryKey(autoGenerate = true) val id: Long = 0,
+    val date: String,
+    val fieldId: Long,         // 🔗 связь с полем
+    val description: String,
+    val amount: Double
+)

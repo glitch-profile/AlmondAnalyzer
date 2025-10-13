@@ -1,0 +1,10 @@
+class ExpensesViewModel(private val repository: ExpenseRepository) : ViewModel() {
+
+    val expenses: StateFlow<List<Expense>> = repository.expenses
+
+    fun getTotalForField(fieldId: Long): Double = repository.getTotal(fieldId)
+
+    suspend fun addExpense(expense: Expense) = repository.addExpense(expense)
+    suspend fun removeExpense(expense: Expense) = repository.removeExpense(expense)
+    suspend fun loadExpensesForField(fieldId: Long) = repository.loadForField(fieldId)
+}
