@@ -1,0 +1,23 @@
+@Dao
+interface ExpenseDao {
+    @Query("SELECT * FROM expenses")
+    suspend fun getAll(): List<Expense>
+
+    @Query("SELECT * FROM expenses WHERE fieldId = :fieldId")
+    suspend fun getByField(fieldId: Long): List<Expense>
+
+    @Insert
+    suspend fun insert(expense: Expense)
+
+    @Delete
+    suspend fun delete(expense: Expense)
+
+    @Query("SELECT * FROM expenses WHERE description LIKE '%' || :query || '%'")
+    suspend fun search(query: String): List<Expense>
+
+    @Query("SELECT * FROM expenses ORDER BY date DESC")
+    suspend fun getSortedByDate(): List<Expense>
+
+    @Query("SELECT * FROM expenses ORDER BY amount DESC")
+    suspend fun getSortedByAmount(): List<Expense>
+}
