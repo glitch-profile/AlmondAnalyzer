@@ -1,40 +1,36 @@
-class ExpenseRepository(private val storage: ExpenseStorage) {
+package com.glitchdev.almondanalyzer.core.data.repository
 
-    private val _expenses = MutableStateFlow<List<Expense>>(emptyList())
-    val expenses: StateFlow<List<Expense>> = _expenses
+import com.glitchdev.almondanalyzer.core.data.db.Expense
+import com.glitchdev.almondanalyzer.core.data.db.ExpenseDao
 
-    suspend fun loadAll() {
-        _expenses.value = storage.load()
+class ExpenseRepositoryImpl(
+    private val expenseDao: ExpenseDao
+) : ExpenseRepository {
+
+    private val cachedExpenses = mutableListOf<Expense>()
+
+    override suspend fun getAllExpenses(): List<Expense> {
+        val fromDb = expenseDao.getAllExpenses()
+        cachedExpenses.clear()
+        cachedExpenses.addAll(fromDb)
+        return fromDb
     }
 
-    suspend fun loadForField(fieldId: Long) {
-        _expenses.value = storage.loadForField(fieldId)
+    override suspend fun insertExpense(expense: Expense) {
+        expenseDao.insertExpense(expense)
+        cachedExpenses.add(expense)
     }
 
-    suspend fun addExpense(expense: Expense) {
-        storage.add(expense)
-        loadAll()
+    override suspend fun deleteExpense(expense: Expense) {
+        expenseDao.deleteExpense(expense)
+        cachedExpenses.remove(expense)
     }
 
-    suspend fun removeExpense(expense: Expense) {
-        storage.remove(expense)
-        loadAll()
+    override suspend fun updateExpense(expense: Expense) {
+        expenseDao.updateExpense(expense)
+        val index = cachedExpenses.indexOfFirst { it.id == expense.id }
+        if (index >= 0) cachedExpenses[index] = expense
     }
 
-    suspend fun search(query: String) {
-        _expenses.value = storage.search(query)
-    }
-
-    suspend fun sortByDate() {
-        _expenses.value = storage.getSortedByDate()
-    }
-
-    suspend fun sortByAmount() {
-        _expenses.value = storage.getSortedByAmount()
-    }
-
-    fun getTotalAll(): Double = _expenses.value.sumOf { it.amount }
-
-    fun getTotalForField(fieldId: Long): Double =
-        _expenses.value.filter { it.fieldId == fieldId }.sumOf { it.amount }
+    override fun getCachedExpenses(): List<Expense> = cachedExpenses
 }

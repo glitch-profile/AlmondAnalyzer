@@ -1,23 +1,15 @@
+package com.glitchdev.almondanalyzer.expenses.data
+
+import androidx.room.*
+
 @Dao
 interface ExpenseDao {
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertExpense(expense: Expense)
+
+    @Query("DELETE FROM expenses WHERE id = :id")
+    suspend fun deleteExpense(id: Long)
+
     @Query("SELECT * FROM expenses")
-    suspend fun getAll(): List<Expense>
-
-    @Query("SELECT * FROM expenses WHERE fieldId = :fieldId")
-    suspend fun getByField(fieldId: Long): List<Expense>
-
-    @Insert
-    suspend fun insert(expense: Expense)
-
-    @Delete
-    suspend fun delete(expense: Expense)
-
-    @Query("SELECT * FROM expenses WHERE description LIKE '%' || :query || '%'")
-    suspend fun search(query: String): List<Expense>
-
-    @Query("SELECT * FROM expenses ORDER BY date DESC")
-    suspend fun getSortedByDate(): List<Expense>
-
-    @Query("SELECT * FROM expenses ORDER BY amount DESC")
-    suspend fun getSortedByAmount(): List<Expense>
+    suspend fun getAllExpenses(): List<Expense>
 }
