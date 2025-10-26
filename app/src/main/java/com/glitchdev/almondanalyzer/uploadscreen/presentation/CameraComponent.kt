@@ -1,8 +1,14 @@
 package com.glitchdev.almondanalyzer.uploadscreen.presentation
 
-import android.util.Log
+import android.graphics.Bitmap
+import android.graphics.Matrix
+import android.util.Size
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
+import androidx.camera.core.ImageProxy
+import androidx.camera.core.resolutionselector.ResolutionSelector
+import androidx.camera.core.resolutionselector.ResolutionStrategy
+import androidx.camera.core.resolutionselector.ResolutionStrategy.FALLBACK_RULE_CLOSEST_HIGHER_THEN_LOWER
 import androidx.camera.view.CameraController
 import androidx.camera.view.LifecycleCameraController
 import androidx.compose.animation.AnimatedContent
@@ -46,6 +52,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import com.glitchdev.almondanalyzer.R
 import com.glitchdev.almondanalyzer.ui.components.AppButtonDefaults
 import com.glitchdev.almondanalyzer.ui.components.AppIconButton
@@ -58,12 +65,9 @@ import com.glitchdev.almondanalyzer.ui.icons.svgs.Clear
 import com.glitchdev.almondanalyzer.ui.icons.svgs.Upload
 import com.glitchdev.almondanalyzer.ui.theme.AppTheme
 import com.glitchdev.almondanalyzer.ui.theme.appSpringDefault
-import org.koin.compose.viewmodel.koinViewModel
 import java.io.File
 import java.time.OffsetDateTime
 import java.time.ZoneId
-
-private const val TAG = "CAMERA_COMPONENT"
 
 @Composable
 fun CameraComponent(
@@ -76,14 +80,18 @@ fun CameraComponent(
     onUpdateCameraStreamStatus: (isAvailable: Boolean) -> Unit,
     onPhotoTaken: (photoUri: String) -> Unit
 ) {
-    val viewModel: CameraComponentViewModel = koinViewModel()
     val context = LocalContext.current
 
     val cameraController = remember {
+        val resolutionSelector = ResolutionSelector.Builder()
+            .setResolutionStrategy(ResolutionStrategy(Size(960, 1280), FALLBACK_RULE_CLOSEST_HIGHER_THEN_LOWER))
+            .build()
         LifecycleCameraController(context.applicationContext).apply {
             setEnabledUseCases(
                 CameraController.IMAGE_CAPTURE
             )
+            imageCaptureMode = ImageCapture.CAPTURE_MODE_MAXIMIZE_QUALITY
+            imageCaptureResolutionSelector = resolutionSelector
         }
     }
 
@@ -156,17 +164,33 @@ fun CameraComponent(
                         && (state.cameraStatus == CameraStatusState.READY)
                         && (state.cameraStreamStatus == CameraStreamStatus.OK)
                     ) {
-                        val fileName =
-                            "${OffsetDateTime.now(ZoneId.systemDefault()).toEpochSecond()}.jpg"
-                        val fileCacheDir = context.cacheDir.resolve("Camera").apply { mkdirs() }
-                        val imageFile = File(fileCacheDir, fileName)
-                        val outputFileOptions =
-                            ImageCapture.OutputFileOptions.Builder(imageFile).build()
-                        viewModel.takePicture(
-                            outputFileOptions = outputFileOptions,
-                            cameraController = cameraController,
-                            onImageSaved = { imageUri ->
-                                Log.i(TAG, "CameraComponent: image saved in $imageUri")
+                        cameraController.takePicture(
+                            ContextCompat.getMainExecutor(context),
+                            object: ImageCapture.OnImageCapturedCallback() {
+                                override fun onCaptureSuccess(image: ImageProxy) {
+                                    super.onCaptureSuccess(image)
+                                    val fileName =
+                                        "${OffsetDateTime.now(ZoneId.systemDefault()).toEpochSecond()}.jpg"
+                                    val fileCacheDir = context.cacheDir.resolve("Camera").apply { mkdirs() }
+                                    val imageFile = File(fileCacheDir, fileName)
+                                    val matrix = Matrix().apply {
+                                        postRotate(image.imageInfo.rotationDegrees.toFloat())
+                                    }
+                                    val rotatedBitmap = Bitmap.createBitmap(
+                                        image.toBitmap(),
+                                        0,
+                                        0,
+                                        image.width,
+                                        image.height,
+                                        matrix,
+                                        true
+                                    )
+                                    imageFile.outputStream().use { stream ->
+                                        rotatedBitmap.compress(Bitmap.CompressFormat.JPEG, 75, stream)
+                                    }
+                                    rotatedBitmap.recycle()
+                                    onPhotoTaken.invoke(imageFile.path)
+                                }
                             }
                         )
                     }
