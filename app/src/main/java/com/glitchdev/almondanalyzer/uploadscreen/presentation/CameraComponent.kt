@@ -1,6 +1,8 @@
 package com.glitchdev.almondanalyzer.uploadscreen.presentation
 
+import android.util.Log
 import androidx.camera.core.CameraSelector
+import androidx.camera.core.ImageCapture
 import androidx.camera.view.CameraController
 import androidx.camera.view.LifecycleCameraController
 import androidx.compose.animation.AnimatedContent
@@ -56,6 +58,12 @@ import com.glitchdev.almondanalyzer.ui.icons.svgs.Clear
 import com.glitchdev.almondanalyzer.ui.icons.svgs.Upload
 import com.glitchdev.almondanalyzer.ui.theme.AppTheme
 import com.glitchdev.almondanalyzer.ui.theme.appSpringDefault
+import org.koin.compose.viewmodel.koinViewModel
+import java.io.File
+import java.time.OffsetDateTime
+import java.time.ZoneId
+
+private const val TAG = "CAMERA_COMPONENT"
 
 @Composable
 fun CameraComponent(
@@ -68,6 +76,7 @@ fun CameraComponent(
     onUpdateCameraStreamStatus: (isAvailable: Boolean) -> Unit,
     onPhotoTaken: (photoUri: String) -> Unit
 ) {
+    val viewModel: CameraComponentViewModel = koinViewModel()
     val context = LocalContext.current
 
     val cameraController = remember {
@@ -105,7 +114,7 @@ fun CameraComponent(
             CameraView(
                 modifier = Modifier
                     .fillMaxSize()
-                    .graphicsLayer(alpha = if (state.cameraStreamStatus == CameraStreamStatus.OK) 0.3f else 0f),
+                    .graphicsLayer(alpha = if (state.cameraStreamStatus == CameraStreamStatus.OK) 1f else 0f),
                 cameraController = cameraController,
                 onUpdateStreamState = onUpdateCameraStreamStatus
             )
@@ -113,7 +122,7 @@ fun CameraComponent(
 
         AnimatedVisibility(
             modifier = Modifier.fillMaxSize(),
-            visible = state.isExpanded && state.cameraStreamStatus != CameraStreamStatus.OK,
+            visible = state.isExpanded,
             enter = fadeIn(appSpringDefault()),
             exit = fadeOut(appSpringDefault())
         ) {
@@ -142,7 +151,26 @@ fun CameraComponent(
         ) {
             CameraControlsComponent(
                 onCloseCameraButtonClicked = onCollapseButtonClicked,
-                onTakePhotoButtonClicked = { onPhotoTaken.invoke("") },
+                onTakePhotoButtonClicked = {
+                    if ((state.isExpanded)
+                        && (state.cameraStatus == CameraStatusState.READY)
+                        && (state.cameraStreamStatus == CameraStreamStatus.OK)
+                    ) {
+                        val fileName =
+                            "${OffsetDateTime.now(ZoneId.systemDefault()).toEpochSecond()}.jpg"
+                        val fileCacheDir = context.cacheDir.resolve("Camera").apply { mkdirs() }
+                        val imageFile = File(fileCacheDir, fileName)
+                        val outputFileOptions =
+                            ImageCapture.OutputFileOptions.Builder(imageFile).build()
+                        viewModel.takePicture(
+                            outputFileOptions = outputFileOptions,
+                            cameraController = cameraController,
+                            onImageSaved = { imageUri ->
+                                Log.i(TAG, "CameraComponent: image saved in $imageUri")
+                            }
+                        )
+                    }
+                },
                 onSwitchCameraButtonClicked = onSwitchCameraButtonClicked
             )
         }
@@ -369,3 +397,4 @@ private fun CameraStreamLoadingMessage() {
         )
     }
 }
+

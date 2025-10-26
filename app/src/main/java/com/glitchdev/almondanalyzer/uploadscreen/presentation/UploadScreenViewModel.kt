@@ -8,11 +8,15 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.util.concurrent.Executors
+
 
 class UploadScreenViewModel: ViewModel() {
 
     private val _cameraState = MutableStateFlow(CameraComponentState())
     val cameraState = _cameraState.asStateFlow()
+
+    private val fileSaveExecutor = Executors.newSingleThreadExecutor()
 
     private var updateCameraStreamStatusJob: Job? = null
 
