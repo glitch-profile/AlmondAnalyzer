@@ -2,6 +2,8 @@ package com.glitchdev.almondanalyzer.uploadscreen.presentation
 
 import android.Manifest
 import android.content.pm.PackageManager
+import android.net.Uri
+import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.core.animateDpAsState
@@ -24,34 +26,52 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import com.glitchdev.almondanalyzer.ui.theme.appSpringDefault
+import com.glitchdev.almondanalyzer.uploadscreen.presentation.cameracomponent.CameraComponent
+import com.glitchdev.almondanalyzer.uploadscreen.presentation.cameracomponent.CameraComponentState
+import com.glitchdev.almondanalyzer.uploadscreen.presentation.imagepicker.ImagePickerState
 
 @Composable
 fun UploadScreen(
     cameraState: CameraComponentState,
+    imagePickerState: ImagePickerState,
     onUpdateCameraPermissions: (isPermissionGranted: Boolean) -> Unit,
     onUpdateCameraFullscreenMode: (isExpanded: Boolean) -> Unit,
     onUpdateCameraStreamStatus: (isAvailable: Boolean) -> Unit,
-    onSwitchSelectedCamera: (isBackCamera: Boolean) -> Unit
+    onSwitchSelectedCamera: (isBackCamera: Boolean) -> Unit,
+    onPhotoTaken: (imageUri: Uri) -> Unit,
+    onUpdateImagePickerPermissions: (isPermissionsGranted: Boolean) -> Unit,
+    onSelectImage: (imageUri: Uri) -> Unit,
+    onUnselectImage: (imageUri: Uri) -> Unit,
+    onClearImageSelection: () -> Unit
 ) {
     val context = LocalContext.current
     val density = LocalDensity.current
 
-    val permissionLauncher = rememberLauncherForActivityResult(
+    val cameraPermission = Manifest.permission.CAMERA
+    val imagePickerPermission = remember {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) Manifest.permission.READ_MEDIA_IMAGES
+        else Manifest.permission.READ_EXTERNAL_STORAGE
+    }
+
+    val cameraPermissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission(),
-        onResult = { isGranted ->
-            if (isGranted) onUpdateCameraPermissions.invoke(true)
-            else onUpdateCameraPermissions.invoke(false)
-        }
+        onResult = { onUpdateCameraPermissions.invoke(it) }
+    )
+
+    val imagePickerPermissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission(),
+        onResult = { onUpdateImagePickerPermissions.invoke(it) }
     )
 
     var maxScreenHeight by remember { mutableStateOf(Dp.Unspecified) }
 
     LaunchedEffect(null) {
-        when (PackageManager.PERMISSION_GRANTED) {
-            ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA) ->
-                onUpdateCameraPermissions.invoke(true)
-            else -> onUpdateCameraPermissions.invoke(false)
-        }
+        val isHasCameraAccess = ContextCompat.checkSelfPermission(context, cameraPermission) ==
+                PackageManager.PERMISSION_GRANTED
+        onUpdateCameraPermissions.invoke(isHasCameraAccess)
+        val isHasImagesAccess = ContextCompat.checkSelfPermission(context, imagePickerPermission) ==
+                PackageManager.PERMISSION_GRANTED
+        onUpdateImagePickerPermissions.invoke(isHasImagesAccess)
     }
 
     Column(
@@ -75,12 +95,12 @@ fun UploadScreen(
                 modifier = Modifier
                     .fillMaxSize(),
                 state = cameraState,
-                onNoPermissionClicked = { permissionLauncher.launch(Manifest.permission.CAMERA) },
+                onNoPermissionClicked = { cameraPermissionLauncher.launch(cameraPermission) },
                 onExpandButtonClicked = { onUpdateCameraFullscreenMode.invoke(true) },
                 onCollapseButtonClicked = { onUpdateCameraFullscreenMode.invoke(false) },
                 onSwitchCameraButtonClicked = { onSwitchSelectedCamera.invoke(!cameraState.isBackCamera) },
                 onUpdateCameraStreamStatus = onUpdateCameraStreamStatus,
-                onPhotoTaken = { println("photo taken") },
+                onPhotoTaken = onPhotoTaken,
             )
         }
     }

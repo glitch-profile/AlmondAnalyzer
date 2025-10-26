@@ -1,4 +1,4 @@
-package com.glitchdev.almondanalyzer.uploadscreen.presentation
+package com.glitchdev.almondanalyzer.uploadscreen.presentation.cameracomponent
 
 data class CameraComponentState(
     val cameraStatus: CameraStatusState = CameraStatusState.INITIALIZING,

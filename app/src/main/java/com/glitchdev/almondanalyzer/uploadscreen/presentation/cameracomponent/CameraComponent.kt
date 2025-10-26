@@ -1,7 +1,8 @@
-package com.glitchdev.almondanalyzer.uploadscreen.presentation
+package com.glitchdev.almondanalyzer.uploadscreen.presentation.cameracomponent
 
 import android.graphics.Bitmap
 import android.graphics.Matrix
+import android.net.Uri
 import android.util.Size
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
@@ -53,6 +54,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
+import androidx.core.net.toUri
 import com.glitchdev.almondanalyzer.R
 import com.glitchdev.almondanalyzer.ui.components.AppButtonDefaults
 import com.glitchdev.almondanalyzer.ui.components.AppIconButton
@@ -78,7 +80,7 @@ fun CameraComponent(
     onCollapseButtonClicked: () -> Unit,
     onSwitchCameraButtonClicked: () -> Unit,
     onUpdateCameraStreamStatus: (isAvailable: Boolean) -> Unit,
-    onPhotoTaken: (photoUri: String) -> Unit
+    onPhotoTaken: (photoUri: Uri) -> Unit
 ) {
     val context = LocalContext.current
 
@@ -189,7 +191,7 @@ fun CameraComponent(
                                         rotatedBitmap.compress(Bitmap.CompressFormat.JPEG, 75, stream)
                                     }
                                     rotatedBitmap.recycle()
-                                    onPhotoTaken.invoke(imageFile.path)
+                                    onPhotoTaken.invoke(imageFile.toUri())
                                 }
                             }
                         )

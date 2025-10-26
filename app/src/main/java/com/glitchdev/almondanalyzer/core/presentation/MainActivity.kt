@@ -1,6 +1,7 @@
 package com.glitchdev.almondanalyzer.core.presentation
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -147,12 +148,19 @@ private fun ScreensContent(
             composable<ScreenRoutes.RecentImagesScreen> {
                 val uploadScreenViewModel: UploadScreenViewModel = koinViewModel()
                 val cameraState by uploadScreenViewModel.cameraState.collectAsState()
+                val imagePickerState by uploadScreenViewModel.pickerState.collectAsState()
                 UploadScreen(
                     cameraState = cameraState,
+                    imagePickerState = imagePickerState,
                     onUpdateCameraPermissions = uploadScreenViewModel::onUpdateCameraPermissions,
                     onUpdateCameraFullscreenMode = uploadScreenViewModel::onUpdateCameraFullscreenMode,
                     onSwitchSelectedCamera = uploadScreenViewModel::onUpdateSelectedCamera,
-                    onUpdateCameraStreamStatus = uploadScreenViewModel::onUpdateCameraStreamAvailability
+                    onUpdateCameraStreamStatus = uploadScreenViewModel::onUpdateCameraStreamAvailability,
+                    onPhotoTaken = { Log.i("UPLOAD_SCREEN", "Image captured in $it") },
+                    onUpdateImagePickerPermissions = uploadScreenViewModel::onUpdateImagePickerPermissions,
+                    onSelectImage = uploadScreenViewModel::addImageToSelection,
+                    onUnselectImage = uploadScreenViewModel::removeImageFromSelection,
+                    onClearImageSelection = uploadScreenViewModel::clearSelection,
                 )
             }
         }

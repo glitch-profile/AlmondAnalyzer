@@ -1,14 +1,22 @@
 package com.glitchdev.almondanalyzer.uploadscreen.presentation
 
+import android.content.ContentUris
+import android.content.Context
+import android.net.Uri
+import android.provider.MediaStore
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.glitchdev.almondanalyzer.uploadscreen.presentation.cameracomponent.CameraComponentState
+import com.glitchdev.almondanalyzer.uploadscreen.presentation.cameracomponent.CameraStatusState
+import com.glitchdev.almondanalyzer.uploadscreen.presentation.cameracomponent.CameraStreamStatus
+import com.glitchdev.almondanalyzer.uploadscreen.presentation.imagepicker.ImagePickerState
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.util.concurrent.Executors
+import okhttp3.internal.toImmutableList
 
 
 class UploadScreenViewModel: ViewModel() {
@@ -16,7 +24,8 @@ class UploadScreenViewModel: ViewModel() {
     private val _cameraState = MutableStateFlow(CameraComponentState())
     val cameraState = _cameraState.asStateFlow()
 
-    private val fileSaveExecutor = Executors.newSingleThreadExecutor()
+    private val _pickerState = MutableStateFlow(ImagePickerState())
+    val pickerState = _pickerState.asStateFlow()
 
     private var updateCameraStreamStatusJob: Job? = null
 
@@ -34,19 +43,16 @@ class UploadScreenViewModel: ViewModel() {
             }
         }
     }
-
     fun onUpdateCameraFullscreenMode(isCameraExpanded: Boolean) {
         if (cameraState.value.cameraStatus == CameraStatusState.READY) {
             _cameraState.update { it.copy(isExpanded = isCameraExpanded) }
         }
     }
-
     fun onUpdateSelectedCamera(isBackCameraSelected: Boolean) {
         if (cameraState.value.cameraStatus == CameraStatusState.READY) {
             _cameraState.update { it.copy(isBackCamera = isBackCameraSelected) }
         }
     }
-
     fun onUpdateCameraStreamAvailability(isStreamAvailable: Boolean) {
         if (isStreamAvailable) {
             _cameraState.update { it.copy(cameraStreamStatus = CameraStreamStatus.OK) }
@@ -60,5 +66,69 @@ class UploadScreenViewModel: ViewModel() {
             }
         }
     }
+
+    fun loadImagesUris(context: Context) {
+        val uris = mutableListOf<Uri>()
+        val collection = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+
+        val projection = arrayOf(MediaStore.Images.Media._ID)
+        val sortOrder = "${MediaStore.Images.Media.DATE_ADDED} DESC"
+
+        context.contentResolver.query(
+            collection,
+            projection,
+            null,
+            null,
+            sortOrder
+        )?.use { cursor ->
+            val columnId = cursor.getColumnIndexOrThrow(MediaStore.Images.Media._ID)
+            while (cursor.moveToNext()) {
+                val id = cursor.getLong(columnId)
+                val uri = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id)
+                println(uri)
+                uris.add(uri)
+            }
+        }
+        _pickerState.update { it.copy(images = uris.toImmutableList()) }
+    }
+    fun onUpdateImagePickerPermissions(isPermissionsGranted: Boolean) {
+        _pickerState.update {
+            if (isPermissionsGranted) {
+                it.copy(hasPermissions = true)
+            } else {
+                ImagePickerState()
+            }
+        }
+    }
+    fun addImageToSelection(uri: Uri) {
+        if (!pickerState.value.selectedImages.contains(uri)) {
+            _pickerState.update {
+                it.copy(
+                    selectedImages = pickerState.value.selectedImages.toMutableList().apply {
+                        add(uri)
+                        toImmutableList()
+                    }
+                )
+            }
+        }
+    }
+
+    fun removeImageFromSelection(uri: Uri) {
+        if (pickerState.value.selectedImages.contains(uri)) {
+            _pickerState.update {
+                it.copy(
+                    selectedImages = pickerState.value.selectedImages.toMutableList().apply {
+                        remove(uri)
+                        toImmutableList()
+                    }
+                )
+            }
+        }
+    }
+
+    fun clearSelection() {
+        _pickerState.update { it.copy(selectedImages = emptyList()) }
+    }
+
 
 }
