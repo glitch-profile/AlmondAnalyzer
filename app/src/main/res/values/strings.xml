@@ -11,7 +11,9 @@
     <string name="upload_image_camera_component_no_permissions_text">Provide camera\'s permission</string>
     <string name="upload_image_camera_component_camera_ready_title">Camera is ready</string>
     <string name="upload_image_camera_component_camera_ready_text">Open in fullscreen mode</string>
-    <string name="upload_image_camera_component_camera_preview_error_title">Something went wrong…</string>
-    <string name="upload_image_camera_component_camera_preview_error_text">We are sorry, we are unable to open the camera preview at this time.\nPlease try another camera or upload image from the gallery.</string>
+    <string name="upload_image_camera_component_camera_preview_error_title">Camera unavailable</string>
+    <string name="upload_image_camera_component_camera_preview_loading_title">Loading</string>
+    <string name="upload_image_camera_component_camera_preview_error_text">Unable to access the camera. Please check the device settings.</string>
+    <string name="upload_image_camera_component_camera_preview_loading_text">Accessing camera. Please wait…</string>
 
 </resources>

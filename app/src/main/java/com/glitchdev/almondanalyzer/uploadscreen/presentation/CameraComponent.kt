@@ -105,43 +105,28 @@ fun CameraComponent(
             CameraView(
                 modifier = Modifier
                     .fillMaxSize()
-                    .graphicsLayer(alpha = if (state.isCameraStreamAvailable) 1f else 0f),
+                    .graphicsLayer(alpha = if (state.cameraStreamStatus == CameraStreamStatus.OK) 0.3f else 0f),
                 cameraController = cameraController,
                 onUpdateStreamState = onUpdateCameraStreamStatus
             )
         }
 
         AnimatedVisibility(
-            visible = state.isExpanded,
+            modifier = Modifier.fillMaxSize(),
+            visible = state.isExpanded && state.cameraStreamStatus != CameraStreamStatus.OK,
             enter = fadeIn(appSpringDefault()),
             exit = fadeOut(appSpringDefault())
         ) {
-            if (!state.isCameraStreamAvailable) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(horizontal = AppTheme.size.medium),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
-                ) {
-                    Icon(
-                        modifier = Modifier
-                            .size(AppTheme.size.extraLarge),
-                        imageVector = AppIcons.CameraUnavailable,
-                        contentDescription = null,
-                        tint = AppTheme.colorScheme.onSurface
-                    )
-                    Text(
-                        text = stringResource(R.string.upload_image_camera_component_camera_preview_error_title),
-                        style = AppTheme.typography.titleMedium,
-                        color = AppTheme.colorScheme.onSurface
-                    )
-                    Text(
-                        text = stringResource(R.string.upload_image_camera_component_camera_preview_error_text),
-                        textAlign = TextAlign.Center,
-                        style = AppTheme.typography.bodyMedium,
-                        color = AppTheme.colorScheme.onSurfaceVariant
-                    )
+            AnimatedContent(
+                modifier = Modifier.align(Alignment.Center),
+                targetState = state.cameraStreamStatus,
+                transitionSpec = { fadeIn(appSpringDefault()) togetherWith fadeOut(appSpringDefault()) },
+                contentAlignment = Alignment.Center
+            ) { streamStatus ->
+                when (streamStatus) {
+                    CameraStreamStatus.LOADING -> CameraStreamLoadingMessage()
+                    CameraStreamStatus.ERROR -> CameraStreamErrorMessage()
+                    else -> {}
                 }
             }
         }
@@ -335,5 +320,52 @@ private fun CameraControlsComponent(
                 contentDescription = null
             )
         }
+    }
+}
+
+@Composable
+private fun CameraStreamErrorMessage() {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Icon(
+            modifier = Modifier
+                .size(AppTheme.size.extraLarge),
+            imageVector = AppIcons.CameraUnavailable,
+            contentDescription = null,
+            tint = AppTheme.colorScheme.onSurface
+        )
+        Text(
+            text = stringResource(R.string.upload_image_camera_component_camera_preview_error_title),
+            style = AppTheme.typography.titleMedium,
+            color = AppTheme.colorScheme.onSurface
+        )
+        Text(
+            text = stringResource(R.string.upload_image_camera_component_camera_preview_error_text),
+            textAlign = TextAlign.Center,
+            style = AppTheme.typography.bodyMedium,
+            color = AppTheme.colorScheme.onSurfaceVariant
+        )
+    }
+}
+
+@Composable
+private fun CameraStreamLoadingMessage() {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Text(
+            text = stringResource(R.string.upload_image_camera_component_camera_preview_loading_title),
+            style = AppTheme.typography.titleMedium,
+            color = AppTheme.colorScheme.onSurface
+        )
+        Text(
+            text = stringResource(R.string.upload_image_camera_component_camera_preview_loading_text),
+            textAlign = TextAlign.Center,
+            style = AppTheme.typography.bodyMedium,
+            color = AppTheme.colorScheme.onSurfaceVariant
+        )
     }
 }

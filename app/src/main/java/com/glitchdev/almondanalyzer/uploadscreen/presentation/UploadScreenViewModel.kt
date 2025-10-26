@@ -1,14 +1,20 @@
 package com.glitchdev.almondanalyzer.uploadscreen.presentation
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 class UploadScreenViewModel: ViewModel() {
 
     private val _cameraState = MutableStateFlow(CameraComponentState())
     val cameraState = _cameraState.asStateFlow()
+
+    private var updateCameraStreamStatusJob: Job? = null
 
     fun onUpdateCameraPermissions(isPermissionsGranted: Boolean) {
         _cameraState.update {
@@ -37,8 +43,18 @@ class UploadScreenViewModel: ViewModel() {
         }
     }
 
-    fun onUpdateCameraStreamAvailability(isAvailable: Boolean) {
-        _cameraState.update { it.copy(isCameraStreamAvailable = isAvailable) }
+    fun onUpdateCameraStreamAvailability(isStreamAvailable: Boolean) {
+        if (isStreamAvailable) {
+            _cameraState.update { it.copy(cameraStreamStatus = CameraStreamStatus.OK) }
+        } else {
+            _cameraState.update { it.copy(cameraStreamStatus = CameraStreamStatus.LOADING) }
+            updateCameraStreamStatusJob?.cancel()
+            updateCameraStreamStatusJob = viewModelScope.launch {
+                delay(2000) // Seconds to wait for stream to start
+                if (cameraState.value.cameraStreamStatus != CameraStreamStatus.OK)
+                    _cameraState.update { it.copy(cameraStreamStatus = CameraStreamStatus.ERROR) }
+            }
+        }
     }
 
 }

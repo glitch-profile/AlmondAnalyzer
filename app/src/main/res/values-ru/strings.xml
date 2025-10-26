@@ -12,6 +12,8 @@
     <string name="upload_image_camera_component_no_permissions_text">Предоставьте доступ к камере</string>
     <string name="upload_image_camera_component_camera_ready_title">Камера готова</string>
     <string name="upload_image_camera_component_camera_ready_text">Развернуть на весь экран</string>
-    <string name="upload_image_camera_component_camera_preview_error_title">Что-то пошло не так…</string>
-    <string name="upload_image_camera_component_camera_preview_error_text">Извините, мы не можем отобразить изображение с камеры в данный момент.\nПопробуйте использовать другую камеру или загрузите изображение из галереи.</string>
+    <string name="upload_image_camera_component_camera_preview_error_title">Камера недоступна</string>
+    <string name="upload_image_camera_component_camera_preview_loading_title">Загружаем</string>
+    <string name="upload_image_camera_component_camera_preview_error_text">Невозможно получить доступ к камере.\nПожалуйста, проверьте настройки устройства.</string>
+    <string name="upload_image_camera_component_camera_preview_loading_text">Получаем доступ к камере.\nПожалуйста, подождите…</string>
 </resources>
