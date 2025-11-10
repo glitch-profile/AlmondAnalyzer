@@ -1,10 +1,37 @@
-class ExpensesViewModel(private val repository: ExpenseRepository) : ViewModel() {
+package com.glitchdev.almondanalyzer.expenses.presentation
 
-    val expenses: StateFlow<List<Expense>> = repository.expenses
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.glitchdev.almondanalyzer.core.data.db.Expense
+import com.glitchdev.almondanalyzer.expenses.domain.ExpenseRepository
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 
-    fun getTotalForField(fieldId: Long): Double = repository.getTotal(fieldId)
+class ExpenseViewModel(
+    private val repository: ExpenseRepository
+) : ViewModel() {
 
-    suspend fun addExpense(expense: Expense) = repository.addExpense(expense)
-    suspend fun removeExpense(expense: Expense) = repository.removeExpense(expense)
-    suspend fun loadExpensesForField(fieldId: Long) = repository.loadForField(fieldId)
+    private val _expenses = MutableStateFlow<List<Expense>>(emptyList())
+    val expenses: StateFlow<List<Expense>> = _expenses
+
+    fun loadExpenses() {
+        viewModelScope.launch {
+            repository.getAllExpenses().collect {
+                _expenses.value = it
+            }
+        }
+    }
+
+    fun addExpense(expense: Expense) {
+        viewModelScope.launch {
+            repository.addExpense(expense)
+        }
+    }
+
+    fun deleteExpense(expense: Expense) {
+        viewModelScope.launch {
+            repository.deleteExpense(expense)
+        }
+    }
 }

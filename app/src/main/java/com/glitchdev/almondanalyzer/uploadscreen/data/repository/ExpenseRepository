@@ -1,11 +1,11 @@
-class RepositoryProvider(context: Context) {
+package com.glitchdev.almondanalyzer.expenses.domain
 
-    private val db = Room.databaseBuilder(
-        context,
-        AppDatabase::class.java,
-        "almond_analyzer.db"
-    ).build()
+import com.glitchdev.almondanalyzer.expenses.data.Expense
+import kotlinx.coroutines.flow.Flow
 
-    val fieldRepository = FieldRepository(FieldStorage(db.fieldDao()))
-    val expenseRepository = ExpenseRepository(ExpenseStorage(db.expenseDao()))
+interface ExpenseRepository {
+    suspend fun addExpense(expense: Expense)
+    suspend fun deleteExpense(expense: Expense)
+    suspend fun updateExpense(expense: Expense)
+    fun getAllExpenses(): Flow<List<Expense>>
 }

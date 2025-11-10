@@ -1,23 +1,19 @@
+package com.glitchdev.almondanalyzer.expenses.data
+
+import androidx.room.*
+import kotlinx.coroutines.flow.Flow
+
 @Dao
 interface ExpenseDao {
-    @Query("SELECT * FROM expenses")
-    suspend fun getAll(): List<Expense>
-
-    @Query("SELECT * FROM expenses WHERE fieldId = :fieldId")
-    suspend fun getByField(fieldId: Long): List<Expense>
-
-    @Insert
-    suspend fun insert(expense: Expense)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertExpense(expense: Expense)
 
     @Delete
-    suspend fun delete(expense: Expense)
+    suspend fun deleteExpense(expense: Expense)
 
-    @Query("SELECT * FROM expenses WHERE description LIKE '%' || :query || '%'")
-    suspend fun search(query: String): List<Expense>
+    @Update
+    suspend fun updateExpense(expense: Expense)
 
-    @Query("SELECT * FROM expenses ORDER BY date DESC")
-    suspend fun getSortedByDate(): List<Expense>
-
-    @Query("SELECT * FROM expenses ORDER BY amount DESC")
-    suspend fun getSortedByAmount(): List<Expense>
+    @Query("SELECT * FROM expenses")
+    fun getAllExpenses(): Flow<List<Expense>>
 }
