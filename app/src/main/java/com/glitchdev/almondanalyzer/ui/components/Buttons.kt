@@ -184,7 +184,7 @@ fun AppIconButton(
 object AppButtonDefaults {
 
     @Composable
-    fun shape() = AppTheme.shape.large
+    fun shape() = AppTheme.shape.medium
 
     @Composable
     fun compactShape() = AppTheme.shape.small
