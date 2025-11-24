@@ -58,7 +58,7 @@ import androidx.core.net.toUri
 import com.glitchdev.almondanalyzer.R
 import com.glitchdev.almondanalyzer.ui.components.AppButtonDefaults
 import com.glitchdev.almondanalyzer.ui.components.AppIconButton
-import com.glitchdev.almondanalyzer.ui.components.camerapreview2.CameraView
+import com.glitchdev.almondanalyzer.ui.components.CameraView
 import com.glitchdev.almondanalyzer.ui.icons.AppIcons
 import com.glitchdev.almondanalyzer.ui.icons.svgs.Camera
 import com.glitchdev.almondanalyzer.ui.icons.svgs.CameraUnavailable

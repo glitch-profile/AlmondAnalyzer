@@ -21,6 +21,9 @@
     <string name="upload_image_gallery_component_use_system_picker_text">or you can use a system picker</string>
     <string name="upload_image_gallery_component_use_system_picker_label">Select image</string>
     <string name="upload_image_gallery_component_no_images_text">Oops… looks like there are no images on this device yet!</string>
+    <string name="upload_image_gallery_component_temp_only_warning_text">Only temporary files are displayed</string>
+    <string name="upload_image_gallery_component_temp_only_warning_hide_label">Hide</string>
+    <string name="upload_image_gallery_component_temp_only_warning_fix_label">Grant access to files</string>
     <!-- OTHER -->
     <string name="upload_image_import_divider_text">or select from device</string>
     <string name="upload_image_import_clear_selection_label">Clear selection</string>

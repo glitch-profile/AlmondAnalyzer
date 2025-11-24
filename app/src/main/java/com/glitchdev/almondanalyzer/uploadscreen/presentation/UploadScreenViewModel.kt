@@ -102,6 +102,7 @@ class UploadScreenViewModel: ViewModel() {
         println("updating uris")
         viewModelScope.launch {
             val uris = mutableListOf<Uri>()
+            uris.addAll(takenPhotos.value.reversed())
             val collection = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
 
             val projection = arrayOf(MediaStore.Images.Media._ID)

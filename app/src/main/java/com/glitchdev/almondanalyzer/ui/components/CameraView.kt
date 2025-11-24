@@ -1,4 +1,4 @@
-package com.glitchdev.almondanalyzer.ui.components.camerapreview2
+package com.glitchdev.almondanalyzer.ui.components
 
 import androidx.camera.view.LifecycleCameraController
 import androidx.camera.view.PreviewView
@@ -29,7 +29,6 @@ fun CameraView(
                     this.previewStreamState.observe(lifecycleOwner) { streamState ->
                         onUpdateStreamState?.invoke(streamState == PreviewView.StreamState.STREAMING)
                     }
-//                    this.setBackgroundColor(0x000000FF)
                     this.controller = cameraController
                     this.scaleType = PreviewView.ScaleType.FILL_CENTER
                     this.implementationMode = PreviewView.ImplementationMode.COMPATIBLE

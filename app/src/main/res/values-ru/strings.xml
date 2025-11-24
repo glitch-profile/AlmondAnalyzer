@@ -22,6 +22,9 @@
     <string name="upload_image_gallery_component_use_system_picker_text">или продолжить с частичным доступом</string>
     <string name="upload_image_gallery_component_use_system_picker_label">Выбрать изображение</string>
     <string name="upload_image_gallery_component_no_images_text">Уупс… Похоже, мы не смогли найти изображения на этом устройстве!</string>
+    <string name="upload_image_gallery_component_temp_only_warning_text">Отображаются только временные файлы</string>
+    <string name="upload_image_gallery_component_temp_only_warning_hide_label">Скрыть</string>
+    <string name="upload_image_gallery_component_temp_only_warning_fix_label">Дать доступ к файлам</string>
     <!-- OTHER -->
     <string name="upload_image_import_divider_text">или загрузите с устройства</string>
     <string name="upload_image_import_clear_selection_label">Очистить выделенное</string>
