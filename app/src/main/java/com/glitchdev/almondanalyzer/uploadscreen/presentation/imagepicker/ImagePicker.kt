@@ -1,6 +1,9 @@
 package com.glitchdev.almondanalyzer.uploadscreen.presentation.imagepicker
 
 import android.net.Uri
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -26,6 +29,7 @@ import com.glitchdev.almondanalyzer.ui.components.AppButton
 import com.glitchdev.almondanalyzer.ui.components.AppTextButton
 import com.glitchdev.almondanalyzer.ui.components.ImageGallery
 import com.glitchdev.almondanalyzer.ui.theme.AppTheme
+import com.glitchdev.almondanalyzer.ui.theme.appSpringDefault
 
 @Composable
 fun ImagePicker(
@@ -78,7 +82,11 @@ fun ImagePicker(
                 modifier = Modifier
                     .fillMaxSize()
             ) {
-                if (!state.hasPermissions && showTempOnlyWarning) {
+                AnimatedVisibility(
+                    visible = !state.hasPermissions && showTempOnlyWarning,
+                    enter = expandVertically(appSpringDefault()),
+                    exit = shrinkVertically(appSpringDefault())
+                ) {
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
