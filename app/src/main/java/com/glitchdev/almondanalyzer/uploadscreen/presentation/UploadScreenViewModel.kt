@@ -4,6 +4,8 @@ import android.content.ContentUris
 import android.content.Context
 import android.net.Uri
 import android.provider.MediaStore
+import android.util.Log
+import androidx.core.net.toFile
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.glitchdev.almondanalyzer.uploadscreen.presentation.cameracomponent.CameraComponentState
@@ -26,6 +28,9 @@ class UploadScreenViewModel: ViewModel() {
 
     private val _pickerState = MutableStateFlow(ImagePickerState())
     val pickerState = _pickerState.asStateFlow()
+
+    private val _takenPhotos = MutableStateFlow<List<Uri>>(emptyList())
+    val takenPhotos = _takenPhotos.asStateFlow()
 
     private var updateCameraStreamStatusJob: Job? = null
 
@@ -67,29 +72,57 @@ class UploadScreenViewModel: ViewModel() {
         }
     }
 
-    fun loadImagesUris(context: Context) {
-        val uris = mutableListOf<Uri>()
-        val collection = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+    fun onPhotoTaken(imageUri: Uri) {
+        _takenPhotos.update { takenPhotos.value.toMutableList().apply {
+            add(imageUri)
+            toImmutableList()
+        } }
+        _pickerState.update {
+            it.copy(
+                images = pickerState.value.images.toMutableList().apply {
+                    add(0, imageUri)
+                    toImmutableList()
+                }
+            )
+        }
+        addImageToSelection(imageUri)
+    }
 
-        val projection = arrayOf(MediaStore.Images.Media._ID)
-        val sortOrder = "${MediaStore.Images.Media.DATE_ADDED} DESC"
-
-        context.contentResolver.query(
-            collection,
-            projection,
-            null,
-            null,
-            sortOrder
-        )?.use { cursor ->
-            val columnId = cursor.getColumnIndexOrThrow(MediaStore.Images.Media._ID)
-            while (cursor.moveToNext()) {
-                val id = cursor.getLong(columnId)
-                val uri = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id)
-                println(uri)
-                uris.add(uri)
+    fun clearTakenPhotos() {
+        Log.i("TAG", "deleting ${takenPhotos.value}", )
+        takenPhotos.value.forEach {
+            val imageFile = it.toFile()
+            if (imageFile.exists()) {
+                imageFile.delete()
             }
         }
-        _pickerState.update { it.copy(images = uris.toImmutableList()) }
+    }
+
+    fun loadImagesUris(context: Context) {
+        println("updating uris")
+        viewModelScope.launch {
+            val uris = mutableListOf<Uri>()
+            val collection = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+
+            val projection = arrayOf(MediaStore.Images.Media._ID)
+            val sortOrder = "${MediaStore.Images.Media.DATE_ADDED} DESC"
+
+            context.contentResolver.query(
+                collection,
+                projection,
+                null,
+                null,
+                sortOrder
+            )?.use { cursor ->
+                val columnId = cursor.getColumnIndexOrThrow(MediaStore.Images.Media._ID)
+                while (cursor.moveToNext()) {
+                    val id = cursor.getLong(columnId)
+                    val uri = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id)
+                    uris.add(uri)
+                }
+            }
+            _pickerState.update { it.copy(images = uris.toImmutableList()) }
+        }
     }
     fun onUpdateImagePickerPermissions(isPermissionsGranted: Boolean) {
         _pickerState.update {
@@ -130,5 +163,10 @@ class UploadScreenViewModel: ViewModel() {
         _pickerState.update { it.copy(selectedImages = emptyList()) }
     }
 
+    override fun onCleared() {
+        Log.i("TAG", "view model clearing...", )
+        clearTakenPhotos()
+        super.onCleared()
+    }
 
 }
