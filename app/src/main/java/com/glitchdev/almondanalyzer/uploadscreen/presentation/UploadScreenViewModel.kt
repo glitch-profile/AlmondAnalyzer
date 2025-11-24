@@ -126,12 +126,8 @@ class UploadScreenViewModel: ViewModel() {
         }
     }
     fun onUpdateImagePickerPermissions(isPermissionsGranted: Boolean) {
-        _pickerState.update {
-            if (isPermissionsGranted) {
-                it.copy(hasPermissions = true)
-            } else {
-                ImagePickerState()
-            }
+        if (isPermissionsGranted) {
+            _pickerState.update { it.copy(hasPermissions = true) }
         }
     }
     fun addImageToSelection(uri: Uri) {
