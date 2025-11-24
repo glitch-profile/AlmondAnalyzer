@@ -15,5 +15,22 @@
     <string name="upload_image_camera_component_camera_preview_loading_title">Loading</string>
     <string name="upload_image_camera_component_camera_preview_error_text">Unable to access the camera. Please check the device settings.</string>
     <string name="upload_image_camera_component_camera_preview_loading_text">Accessing camera. Please wait…</string>
+    <!-- GALLERY COMPONENT -->
+    <string name="upload_image_gallery_component_no_permissions_text">Permissions to access images on the device are required</string>
+    <string name="upload_image_gallery_component_no_permissions_label">Accept</string>
+    <string name="upload_image_gallery_component_use_system_picker_text">or you can use a system picker</string>
+    <string name="upload_image_gallery_component_use_system_picker_label">Select image</string>
+    <string name="upload_image_gallery_component_no_images_text">Oops… looks like there are no images on this device yet!</string>
+    <!-- OTHER -->
+    <string name="upload_image_import_divider_text">or select from device</string>
+    <string name="upload_image_import_clear_selection_label">Clear selection</string>
+    <string name="upload_image_import_upload_images_label">Upload images</string>
+
+    <!-- COMPONENTS -->
+    <!--JUMP TO START-->
+    <string name="components_jump_to_top_text">Return to top</string>
+    <string name="components_jump_to_bottom_text">Return to bottom</string>
+    <!--LOADING-->
+    <string name="components_loading_text">Loading…</string>
 
 </resources>

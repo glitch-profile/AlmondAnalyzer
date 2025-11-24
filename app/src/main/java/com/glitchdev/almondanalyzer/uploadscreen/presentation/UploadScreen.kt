@@ -6,28 +6,44 @@ import android.net.Uri
 import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
+import com.glitchdev.almondanalyzer.R
+import com.glitchdev.almondanalyzer.ui.components.AppButton
+import com.glitchdev.almondanalyzer.ui.components.AppTextButton
+import com.glitchdev.almondanalyzer.ui.components.AppTextDivider
+import com.glitchdev.almondanalyzer.ui.theme.AppTheme
 import com.glitchdev.almondanalyzer.ui.theme.appSpringDefault
 import com.glitchdev.almondanalyzer.uploadscreen.presentation.cameracomponent.CameraComponent
 import com.glitchdev.almondanalyzer.uploadscreen.presentation.cameracomponent.CameraComponentState
+import com.glitchdev.almondanalyzer.uploadscreen.presentation.imagepicker.ImagePicker
 import com.glitchdev.almondanalyzer.uploadscreen.presentation.imagepicker.ImagePickerState
 
 @Composable
@@ -39,10 +55,13 @@ fun UploadScreen(
     onUpdateCameraStreamStatus: (isAvailable: Boolean) -> Unit,
     onSwitchSelectedCamera: (isBackCamera: Boolean) -> Unit,
     onPhotoTaken: (imageUri: Uri) -> Unit,
+    onOpenImagePreview: (imagePreview: Uri) -> Unit,
     onUpdateImagePickerPermissions: (isPermissionsGranted: Boolean) -> Unit,
+    onUpdateImagesList: () -> Unit,
     onSelectImage: (imageUri: Uri) -> Unit,
     onUnselectImage: (imageUri: Uri) -> Unit,
-    onClearImageSelection: () -> Unit
+    onClearImageSelection: () -> Unit,
+    onUploadImages: () -> Unit
 ) {
     val context = LocalContext.current
     val density = LocalDensity.current
@@ -60,7 +79,9 @@ fun UploadScreen(
 
     val imagePickerPermissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission(),
-        onResult = { onUpdateImagePickerPermissions.invoke(it) }
+        onResult = {
+            onUpdateImagePickerPermissions.invoke(it)
+        }
     )
 
     var maxScreenHeight by remember { mutableStateOf(Dp.Unspecified) }
@@ -102,6 +123,56 @@ fun UploadScreen(
                 onUpdateCameraStreamStatus = onUpdateCameraStreamStatus,
                 onPhotoTaken = onPhotoTaken,
             )
+        }
+        if (cameraWindowHeight != maxScreenHeight) {
+            AppTextDivider(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(
+                        horizontal = AppTheme.size.medium,
+                        vertical = AppTheme.size.small
+                    ),
+                text = stringResource(R.string.upload_image_import_divider_text)
+            )
+            ImagePicker(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f),
+                state = imagePickerState,
+                onRefreshImagesList = onUpdateImagesList,
+                onRequestPermissions = { imagePickerPermissionLauncher.launch(imagePickerPermission) },
+                onOpenImage = onOpenImagePreview,
+                onSelectImage = onSelectImage,
+                onUnselectImage = onUnselectImage,
+                onClearSelection = { onClearImageSelection }
+            )
+            AnimatedVisibility(
+                visible = imagePickerState.selectedImages.isNotEmpty(),
+                enter = expandVertically(appSpringDefault()),
+                exit = shrinkVertically(appSpringDefault())
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(AppTheme.size.medium),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    AppTextButton(
+                        onClick = onClearImageSelection
+                    ) {
+                        Text(stringResource(R.string.upload_image_import_clear_selection_label))
+                    }
+                    Spacer(Modifier.width(AppTheme.size.medium))
+                    AppButton(
+                        modifier = Modifier
+                            .weight(1f),
+                        onClick = onUploadImages
+                    ) {
+                        Text(stringResource(R.string.upload_image_import_upload_images_label))
+                    }
+
+                }
+            }
         }
     }
 

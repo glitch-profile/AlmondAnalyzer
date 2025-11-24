@@ -1,7 +1,6 @@
 package com.glitchdev.almondanalyzer.core.presentation
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -30,6 +29,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -149,6 +149,7 @@ private fun ScreensContent(
                 val uploadScreenViewModel: UploadScreenViewModel = koinViewModel()
                 val cameraState by uploadScreenViewModel.cameraState.collectAsState()
                 val imagePickerState by uploadScreenViewModel.pickerState.collectAsState()
+                val context = LocalContext.current
                 UploadScreen(
                     cameraState = cameraState,
                     imagePickerState = imagePickerState,
@@ -156,11 +157,19 @@ private fun ScreensContent(
                     onUpdateCameraFullscreenMode = uploadScreenViewModel::onUpdateCameraFullscreenMode,
                     onSwitchSelectedCamera = uploadScreenViewModel::onUpdateSelectedCamera,
                     onUpdateCameraStreamStatus = uploadScreenViewModel::onUpdateCameraStreamAvailability,
-                    onPhotoTaken = { Log.i("UPLOAD_SCREEN", "Image captured in $it") },
-                    onUpdateImagePickerPermissions = uploadScreenViewModel::onUpdateImagePickerPermissions,
+                    onPhotoTaken = { uploadScreenViewModel.onPhotoTaken(it) },
+                    onOpenImagePreview = { imageUri ->
+                        // TODO: Add logic for image preview
+                    },
+                    onUpdateImagePickerPermissions = { isPermissionsGranted ->
+                        uploadScreenViewModel.onUpdateImagePickerPermissions(isPermissionsGranted)
+                        if (isPermissionsGranted) uploadScreenViewModel.loadImagesUris(context)
+                    },
+                    onUpdateImagesList = { uploadScreenViewModel.loadImagesUris(context) },
                     onSelectImage = uploadScreenViewModel::addImageToSelection,
                     onUnselectImage = uploadScreenViewModel::removeImageFromSelection,
                     onClearImageSelection = uploadScreenViewModel::clearSelection,
+                    onUploadImages = { navController.navigate(ScreenRoutes.UploadImageScreen) }
                 )
             }
         }
