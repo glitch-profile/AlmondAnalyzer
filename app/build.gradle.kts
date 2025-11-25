@@ -59,6 +59,7 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.core.ktx)
+    implementation(libs.androidx.exifinterface)
     //tests
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

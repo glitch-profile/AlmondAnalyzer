@@ -52,17 +52,17 @@ private val typography = AppTypography(
     titleSmall = TextStyle(
         fontFamily = inter,
         fontSize = 14.sp,
-        fontWeight = FontWeight.Medium
+        fontWeight = FontWeight.Bold
     ),
     titleMedium = TextStyle(
         fontFamily = inter,
         fontSize = 16.sp,
-        fontWeight = FontWeight.Medium
+        fontWeight = FontWeight.Bold
     ),
     titleLarge = TextStyle(
         fontFamily = inter,
         fontSize = 22.sp,
-        fontWeight = FontWeight.Normal
+        fontWeight = FontWeight.Bold
     ),
     bodySmall = TextStyle(
         fontFamily = inter,

@@ -11,7 +11,36 @@
     <string name="upload_image_camera_component_no_permissions_text">Provide camera\'s permission</string>
     <string name="upload_image_camera_component_camera_ready_title">Camera is ready</string>
     <string name="upload_image_camera_component_camera_ready_text">Open in fullscreen mode</string>
-    <string name="upload_image_camera_component_camera_preview_error_title">Something went wrong…</string>
-    <string name="upload_image_camera_component_camera_preview_error_text">We are sorry, we are unable to open the camera preview at this time.\nPlease try another camera or upload image from the gallery.</string>
+    <string name="upload_image_camera_component_camera_preview_error_title">Camera unavailable</string>
+    <string name="upload_image_camera_component_camera_preview_loading_title">Loading</string>
+    <string name="upload_image_camera_component_camera_preview_error_text">Unable to access the camera. Please check the device settings.</string>
+    <string name="upload_image_camera_component_camera_preview_loading_text">Accessing camera. Please wait…</string>
+    <!-- GALLERY COMPONENT -->
+    <string name="upload_image_gallery_component_no_permissions_title">No permissions</string>
+    <string name="upload_image_gallery_component_no_permissions_text">To display all images, please allow file access</string>
+    <string name="upload_image_gallery_component_no_permissions_label">Allow access</string>
+    <string name="upload_image_gallery_component_use_system_picker_text">or you can use a system picker</string>
+    <string name="upload_image_gallery_component_use_system_picker_label">Select image</string>
+    <string name="upload_image_gallery_component_no_images_title">Looks empty…</string>
+    <string name="upload_image_gallery_component_no_images_text">Sorry, we couldn\'t find any saved images!</string>
+    <string name="upload_image_gallery_component_temp_only_warning_title">Temp files only</string>
+    <string name="upload_image_gallery_component_temp_only_warning_text">Permission is required to display all files</string>
+    <string name="upload_image_gallery_component_temp_only_warning_hide_label">Hide</string>
+    <string name="upload_image_gallery_component_temp_only_warning_fix_label">Fix it</string>
+    <!-- OTHER -->
+    <string name="upload_image_import_divider_text">or select from device</string>
+    <string name="upload_image_import_clear_selection_label">Clear selection</string>
+    <string name="upload_image_import_upload_images_label">Upload images</string>
+    <plurals name="upload_image_import_upload_images_sublabel">
+        <item quantity="one">%d photo selected</item>
+        <item quantity="many">%d photos selected</item>
+    </plurals>
+
+    <!-- COMPONENTS -->
+    <!--JUMP TO START-->
+    <string name="components_jump_to_top_text">Return to top</string>
+    <string name="components_jump_to_bottom_text">Return to bottom</string>
+    <!--LOADING-->
+    <string name="components_loading_text">Loading…</string>
 
 </resources>
