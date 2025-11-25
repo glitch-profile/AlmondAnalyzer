@@ -1,7 +1,5 @@
-package com.glitchdev.almondanalyzer.core.data.repository
+package com.glitchdev.almondanalyzer.expenses.data
 
-import com.glitchdev.almondanalyzer.core.data.db.Expense
-import com.glitchdev.almondanalyzer.core.data.db.ExpenseDao
 import com.glitchdev.almondanalyzer.expenses.domain.ExpenseRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow

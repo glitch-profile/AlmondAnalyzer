@@ -2,7 +2,7 @@ package com.glitchdev.almondanalyzer.expenses.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.glitchdev.almondanalyzer.core.data.db.Expense
+import com.glitchdev.almondanalyzer.expenses.data.Expense
 import com.glitchdev.almondanalyzer.expenses.domain.ExpenseRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
