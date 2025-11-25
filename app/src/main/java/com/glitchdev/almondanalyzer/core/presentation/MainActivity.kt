@@ -165,6 +165,7 @@ private fun ScreensContent(
                         uploadScreenViewModel.onUpdateImagePickerPermissions(isPermissionsGranted)
                         if (isPermissionsGranted) uploadScreenViewModel.loadImagesUris(context)
                     },
+                    onHideTempOnlyWarning = uploadScreenViewModel::hideTempOnlyFilesWarning,
                     onUpdateImagesList = { uploadScreenViewModel.loadImagesUris(context) },
                     onSelectImage = uploadScreenViewModel::addImageToSelection,
                     onUnselectImage = uploadScreenViewModel::removeImageFromSelection,

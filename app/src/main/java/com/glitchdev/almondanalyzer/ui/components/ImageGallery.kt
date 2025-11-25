@@ -7,11 +7,14 @@ import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.border
 import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -27,6 +30,8 @@ import com.glitchdev.almondanalyzer.ui.theme.AppTheme
 @Composable
 fun ImageGallery(
     modifier: Modifier = Modifier,
+    contentPadding: PaddingValues =PaddingValues.Zero,
+    lazyGridState: LazyGridState? = null,
     imageUris: List<Uri>,
     selectedImagesUri: List<Uri>,
     onClickOnImage: (image: Uri) -> Unit,
@@ -36,6 +41,8 @@ fun ImageGallery(
 ) {
     LazyVerticalGrid(
         modifier = modifier,
+        contentPadding = contentPadding,
+        state = lazyGridState ?: rememberLazyGridState(),
         columns = GridCells.Fixed(maxColumns)
     ) {
         items(

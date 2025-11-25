@@ -70,6 +70,7 @@ import com.glitchdev.almondanalyzer.ui.theme.appSpringDefault
 import java.io.File
 import java.time.OffsetDateTime
 import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 
 @Composable
 fun CameraComponent(
@@ -171,8 +172,9 @@ fun CameraComponent(
                             object: ImageCapture.OnImageCapturedCallback() {
                                 override fun onCaptureSuccess(image: ImageProxy) {
                                     super.onCaptureSuccess(image)
+                                    val time = OffsetDateTime.now(ZoneId.systemDefault())
                                     val fileName =
-                                        "${OffsetDateTime.now(ZoneId.systemDefault()).toEpochSecond()}.jpg"
+                                        "${time.format(DateTimeFormatter.ISO_DATE_TIME)}.jpg"
                                     val fileCacheDir = context.cacheDir.resolve("Camera").apply { mkdirs() }
                                     val imageFile = File(fileCacheDir, fileName)
                                     val matrix = Matrix().apply {
@@ -191,6 +193,7 @@ fun CameraComponent(
                                         rotatedBitmap.compress(Bitmap.CompressFormat.JPEG, 75, stream)
                                     }
                                     rotatedBitmap.recycle()
+                                    image.close()
                                     onPhotoTaken.invoke(imageFile.toUri())
                                 }
                             }
@@ -268,7 +271,7 @@ fun CameraComponent(
                                             text = stringResource(R.string.upload_image_camera_component_camera_not_ready_title),
                                             maxLines = 1,
                                             overflow = TextOverflow.Ellipsis,
-                                            style = AppTheme.typography.titleMedium,
+                                            style = AppTheme.typography.titleSmall,
                                             color = AppTheme.colorScheme.onSurface
                                         )
                                     } else {
@@ -276,7 +279,7 @@ fun CameraComponent(
                                             text = stringResource(R.string.upload_image_camera_component_camera_ready_title),
                                             maxLines = 1,
                                             overflow = TextOverflow.Ellipsis,
-                                            style = AppTheme.typography.titleMedium,
+                                            style = AppTheme.typography.titleSmall,
                                             color = AppTheme.colorScheme.onSurface
                                         )
                                     }
@@ -392,7 +395,7 @@ private fun CameraStreamErrorMessage() {
         )
         Text(
             text = stringResource(R.string.upload_image_camera_component_camera_preview_error_title),
-            style = AppTheme.typography.titleMedium,
+            style = AppTheme.typography.titleSmall,
             color = AppTheme.colorScheme.onSurface
         )
         Text(
@@ -412,7 +415,7 @@ private fun CameraStreamLoadingMessage() {
     ) {
         Text(
             text = stringResource(R.string.upload_image_camera_component_camera_preview_loading_title),
-            style = AppTheme.typography.titleMedium,
+            style = AppTheme.typography.titleSmall,
             color = AppTheme.colorScheme.onSurface
         )
         Text(

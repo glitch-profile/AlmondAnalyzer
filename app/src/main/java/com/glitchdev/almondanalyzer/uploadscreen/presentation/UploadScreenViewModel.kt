@@ -130,6 +130,9 @@ class UploadScreenViewModel: ViewModel() {
             _pickerState.update { it.copy(hasPermissions = true) }
         }
     }
+    fun hideTempOnlyFilesWarning() {
+        _pickerState.update { it.copy(isShowTempOnlyWarning = false) }
+    }
     fun addImageToSelection(uri: Uri) {
         if (!pickerState.value.selectedImages.contains(uri)) {
             _pickerState.update {

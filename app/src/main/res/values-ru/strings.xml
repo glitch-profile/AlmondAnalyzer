@@ -17,18 +17,27 @@
     <string name="upload_image_camera_component_camera_preview_error_text">Невозможно получить доступ к камере.\nПожалуйста, проверьте настройки устройства.</string>
     <string name="upload_image_camera_component_camera_preview_loading_text">Получаем доступ к камере.\nПожалуйста, подождите…</string>
     <!-- GALLERY COMPONENT -->
-    <string name="upload_image_gallery_component_no_permissions_text">Необходимы разрешения для доступа к изображениям на устройстве</string>
-    <string name="upload_image_gallery_component_no_permissions_label">Разрешить</string>
+    <string name="upload_image_gallery_component_no_permissions_title">Нет разрешений</string>
+    <string name="upload_image_gallery_component_no_permissions_text">Для отображения всех изображений разрешите доступ к файлам</string>
+    <string name="upload_image_gallery_component_no_permissions_label">Предоставить доступ</string>
     <string name="upload_image_gallery_component_use_system_picker_text">или продолжить с частичным доступом</string>
     <string name="upload_image_gallery_component_use_system_picker_label">Выбрать изображение</string>
-    <string name="upload_image_gallery_component_no_images_text">Уупс… Похоже, мы не смогли найти изображения на этом устройстве!</string>
-    <string name="upload_image_gallery_component_temp_only_warning_text">Отображаются только временные файлы</string>
+    <string name="upload_image_gallery_component_no_images_title">Пустовато…</string>
+    <string name="upload_image_gallery_component_no_images_text">Извините, нам не удалось найти сохранённых картинок!</string>
+    <string name="upload_image_gallery_component_temp_only_warning_title">Только временные файлы</string>
+    <string name="upload_image_gallery_component_temp_only_warning_text">Необходимо разрешение для отображения всех файлов</string>
     <string name="upload_image_gallery_component_temp_only_warning_hide_label">Скрыть</string>
-    <string name="upload_image_gallery_component_temp_only_warning_fix_label">Дать доступ к файлам</string>
+    <string name="upload_image_gallery_component_temp_only_warning_fix_label">Исправить</string>
     <!-- OTHER -->
     <string name="upload_image_import_divider_text">или загрузите с устройства</string>
     <string name="upload_image_import_clear_selection_label">Очистить выделенное</string>
-    <string name="upload_image_import_upload_images_label">Продолжить</string>
+    <string name="upload_image_import_upload_images_label">Провести анализ</string>
+    <plurals name="upload_image_import_upload_images_sublabel">
+        <item quantity="one">выбрана %d фотография</item>
+        <item quantity="few">выбрано %d фотографии</item>
+        <item quantity="many">выбрано %d фотографий</item>
+    </plurals>
+
 
     <!-- COMPONENTS -->
     <!--JUMP TO START-->

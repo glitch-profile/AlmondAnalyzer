@@ -4,6 +4,7 @@ import android.net.Uri
 
 data class ImagePickerState(
     val hasPermissions: Boolean = false,
+    val isShowTempOnlyWarning: Boolean = true,
     val images: List<Uri> = listOf(),
     val selectedImages: List<Uri> = listOf()
 )

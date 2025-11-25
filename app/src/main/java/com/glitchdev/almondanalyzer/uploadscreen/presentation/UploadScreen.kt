@@ -12,13 +12,16 @@ import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -31,14 +34,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import com.glitchdev.almondanalyzer.R
 import com.glitchdev.almondanalyzer.ui.components.AppButton
-import com.glitchdev.almondanalyzer.ui.components.AppTextButton
+import com.glitchdev.almondanalyzer.ui.components.AppButtonDefaults
+import com.glitchdev.almondanalyzer.ui.components.AppIconButton
 import com.glitchdev.almondanalyzer.ui.components.AppTextDivider
+import com.glitchdev.almondanalyzer.ui.icons.AppIcons
+import com.glitchdev.almondanalyzer.ui.icons.svgs.Clear
 import com.glitchdev.almondanalyzer.ui.theme.AppTheme
 import com.glitchdev.almondanalyzer.ui.theme.appSpringDefault
 import com.glitchdev.almondanalyzer.uploadscreen.presentation.cameracomponent.CameraComponent
@@ -57,6 +64,7 @@ fun UploadScreen(
     onPhotoTaken: (imageUri: Uri) -> Unit,
     onOpenImagePreview: (imagePreview: Uri) -> Unit,
     onUpdateImagePickerPermissions: (isPermissionsGranted: Boolean) -> Unit,
+    onHideTempOnlyWarning: () -> Unit,
     onUpdateImagesList: () -> Unit,
     onSelectImage: (imageUri: Uri) -> Unit,
     onUnselectImage: (imageUri: Uri) -> Unit,
@@ -125,6 +133,8 @@ fun UploadScreen(
             )
         }
         if (cameraWindowHeight != maxScreenHeight) {
+            var bottomMenuHeight by remember { mutableStateOf(0.dp) }
+            val density = LocalDensity.current
             AppTextDivider(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -134,46 +144,96 @@ fun UploadScreen(
                     ),
                 text = stringResource(R.string.upload_image_import_divider_text)
             )
-            ImagePicker(
+            Box(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f),
-                state = imagePickerState,
-                onRefreshImagesList = onUpdateImagesList,
-                onRequestPermissions = { imagePickerPermissionLauncher.launch(imagePickerPermission) },
-                onOpenImage = onOpenImagePreview,
-                onSelectImage = onSelectImage,
-                onUnselectImage = onUnselectImage,
-                onClearSelection = { onClearImageSelection }
-            )
-            AnimatedVisibility(
-                visible = imagePickerState.selectedImages.isNotEmpty(),
-                enter = expandVertically(appSpringDefault()),
-                exit = shrinkVertically(appSpringDefault())
+                    .fillMaxSize(),
+                contentAlignment = Alignment.BottomCenter
             ) {
-                Row(
+                ImagePicker(
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    contentPadding = PaddingValues(bottom = bottomMenuHeight),
+                    state = imagePickerState,
+                    onHideTempOnlyWarning = onHideTempOnlyWarning,
+                    onRefreshImagesList = onUpdateImagesList,
+                    onRequestPermissions = { imagePickerPermissionLauncher.launch(imagePickerPermission) },
+                    onOpenImage = onOpenImagePreview,
+                    onSelectImage = onSelectImage,
+                    onUnselectImage = onUnselectImage,
+                    onClearSelection = { onClearImageSelection }
+                )
+                Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(AppTheme.size.medium),
-                    verticalAlignment = Alignment.CenterVertically
+                        .onSizeChanged { newSize ->
+                            bottomMenuHeight = with(density) { newSize.height.toDp() }
+                        }
                 ) {
-                    AppTextButton(
-                        onClick = onClearImageSelection
-                    ) {
-                        Text(stringResource(R.string.upload_image_import_clear_selection_label))
-                    }
-                    Spacer(Modifier.width(AppTheme.size.medium))
-                    AppButton(
-                        modifier = Modifier
-                            .weight(1f),
-                        onClick = onUploadImages
-                    ) {
-                        Text(stringResource(R.string.upload_image_import_upload_images_label))
-                    }
-
+                    UploadButtonsMenu(
+                        selectedImages = imagePickerState.selectedImages,
+                        onClearImageSelection = onClearImageSelection,
+                        onUploadImages = onUploadImages
+                    )
                 }
             }
         }
     }
+}
 
+@Composable
+private fun UploadButtonsMenu(
+    selectedImages: List<Uri>,
+    onClearImageSelection: () -> Unit,
+    onUploadImages: () -> Unit
+) {
+    AnimatedVisibility(
+        visible = selectedImages.isNotEmpty(),
+        enter = expandVertically(appSpringDefault()),
+        exit = shrinkVertically(appSpringDefault())
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(AppTheme.size.medium)
+        ) {
+            AppIconButton(
+                modifier = Modifier
+                    .size(48.dp),
+                onClick = onClearImageSelection,
+                shape = AppButtonDefaults.shape(),
+                colors = AppButtonDefaults.textButtonColors(
+                    containerColor = AppTheme.colorScheme.surface.copy(0.8f)
+                )
+            ) {
+                Icon(
+                    imageVector = AppIcons.Clear,
+                    contentDescription = null
+                )
+            }
+            Spacer(Modifier.width(AppTheme.size.medium))
+            AppButton(
+                modifier = Modifier
+                    .height(48.dp)
+                    .weight(1f),
+                enabled = selectedImages.isNotEmpty(),
+                onClick = onUploadImages,
+                shape = AppButtonDefaults.shape()
+            ) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(stringResource(R.string.upload_image_import_upload_images_label))
+                    Text(
+                        text = pluralStringResource(
+                            R.plurals.upload_image_import_upload_images_sublabel,
+                            count = selectedImages.size,
+                            selectedImages.size
+                        ),
+                        style = AppTheme.typography.titleSmall,
+                        color = AppTheme.colorScheme.onPrimaryVariant
+                    )
+                }
+            }
+        }
+    }
 }
