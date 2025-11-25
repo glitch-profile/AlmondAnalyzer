@@ -6,6 +6,7 @@ import com.glitchdev.almondanalyzer.expenses.data.Expense
 import com.glitchdev.almondanalyzer.expenses.domain.ExpenseRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class ExpenseViewModel(
@@ -13,7 +14,7 @@ class ExpenseViewModel(
 ) : ViewModel() {
 
     private val _expenses = MutableStateFlow<List<Expense>>(emptyList())
-    val expenses: StateFlow<List<Expense>> = _expenses
+    val expenses: StateFlow<List<Expense>> = _expenses.asStateFlow()
 
     fun loadExpenses() {
         viewModelScope.launch {
