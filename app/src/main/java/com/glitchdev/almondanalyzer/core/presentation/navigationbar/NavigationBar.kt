@@ -31,7 +31,7 @@ import com.glitchdev.almondanalyzer.R
 import com.glitchdev.almondanalyzer.core.utils.ScreenRoutes
 import com.glitchdev.almondanalyzer.ui.icons.AppIcons
 import com.glitchdev.almondanalyzer.ui.icons.svgs.Ai
-import com.glitchdev.almondanalyzer.ui.icons.svgs.Aifilled
+import com.glitchdev.almondanalyzer.ui.icons.svgs.AiFilled
 import com.glitchdev.almondanalyzer.ui.icons.svgs.Recents
 import com.glitchdev.almondanalyzer.ui.icons.svgs.RecentsFilled
 import com.glitchdev.almondanalyzer.ui.theme.AppTheme
@@ -60,7 +60,7 @@ fun NavigationBar(
             modifier = Modifier.weight(1f),
             title = stringResource(R.string.analyze_screen_title),
             defaultIcon = AppIcons.Ai,
-            selectedIcon = AppIcons.Aifilled,
+            selectedIcon = AppIcons.AiFilled,
             isSelected = currentNavGraph
                 ?.hasRoute(ScreenRoutes.AnalyzeImageNavGraph::class) == true,
             onClick = onNavigateToAnalyzeScreen

@@ -28,7 +28,7 @@ import com.glitchdev.almondanalyzer.ui.components.AppButtonDefaults
 import com.glitchdev.almondanalyzer.ui.components.AppTextButton
 import com.glitchdev.almondanalyzer.ui.components.ImageGallery
 import com.glitchdev.almondanalyzer.ui.icons.AppIcons
-import com.glitchdev.almondanalyzer.ui.icons.svgs.Clear
+import com.glitchdev.almondanalyzer.ui.icons.svgs.Alert
 import com.glitchdev.almondanalyzer.ui.theme.AppTheme
 import com.glitchdev.almondanalyzer.ui.theme.appSpringDefault
 
@@ -122,7 +122,7 @@ fun ImagePicker(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Icon(
-                            imageVector = AppIcons.Clear,
+                            imageVector = AppIcons.Alert,
                             contentDescription = null,
                             tint = AppTheme.colorScheme.onSurface
                         )

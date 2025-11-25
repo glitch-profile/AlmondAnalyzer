@@ -45,7 +45,7 @@ import com.glitchdev.almondanalyzer.ui.components.AppButtonDefaults
 import com.glitchdev.almondanalyzer.ui.components.AppIconButton
 import com.glitchdev.almondanalyzer.ui.components.AppTextDivider
 import com.glitchdev.almondanalyzer.ui.icons.AppIcons
-import com.glitchdev.almondanalyzer.ui.icons.svgs.Clear
+import com.glitchdev.almondanalyzer.ui.icons.svgs.CloseSquare
 import com.glitchdev.almondanalyzer.ui.theme.AppTheme
 import com.glitchdev.almondanalyzer.ui.theme.appSpringDefault
 import com.glitchdev.almondanalyzer.uploadscreen.presentation.cameracomponent.CameraComponent
@@ -206,7 +206,7 @@ private fun UploadButtonsMenu(
                 )
             ) {
                 Icon(
-                    imageVector = AppIcons.Clear,
+                    imageVector = AppIcons.CloseSquare,
                     contentDescription = null
                 )
             }
@@ -229,7 +229,7 @@ private fun UploadButtonsMenu(
                             count = selectedImages.size,
                             selectedImages.size
                         ),
-                        style = AppTheme.typography.titleSmall,
+                        style = AppTheme.typography.bodyMedium,
                         color = AppTheme.colorScheme.onPrimaryVariant
                     )
                 }

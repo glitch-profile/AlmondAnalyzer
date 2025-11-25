@@ -11,7 +11,7 @@ import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.unit.dp
 import com.glitchdev.almondanalyzer.ui.icons.AppIcons
 
-public val AppIcons.Aifilled: ImageVector
+public val AppIcons.AiFilled: ImageVector
     get() {
         if (_aifilled != null) {
             return _aifilled!!

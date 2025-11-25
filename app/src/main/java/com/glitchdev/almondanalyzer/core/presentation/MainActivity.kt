@@ -1,5 +1,6 @@
 package com.glitchdev.almondanalyzer.core.presentation
 
+import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -31,12 +32,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.core.net.toUri
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navigation
+import androidx.navigation.toRoute
 import com.glitchdev.almondanalyzer.core.presentation.navigationbar.NavigationBar
 import com.glitchdev.almondanalyzer.core.utils.ScreenRoutes
 import com.glitchdev.almondanalyzer.ui.components.AppSurface
@@ -146,6 +149,11 @@ private fun ScreensContent(
     ) {
         navigation<ScreenRoutes.RecentsNavGraph>(startDestination = ScreenRoutes.RecentImagesScreen) {
             composable<ScreenRoutes.RecentImagesScreen> {
+
+            }
+        }
+        navigation<ScreenRoutes.AnalyzeImageNavGraph>(startDestination = ScreenRoutes.UploadImageScreen) {
+            composable<ScreenRoutes.UploadImageScreen> {
                 val uploadScreenViewModel: UploadScreenViewModel = koinViewModel()
                 val cameraState by uploadScreenViewModel.cameraState.collectAsState()
                 val imagePickerState by uploadScreenViewModel.pickerState.collectAsState()
@@ -170,13 +178,16 @@ private fun ScreensContent(
                     onSelectImage = uploadScreenViewModel::addImageToSelection,
                     onUnselectImage = uploadScreenViewModel::removeImageFromSelection,
                     onClearImageSelection = uploadScreenViewModel::clearSelection,
-                    onUploadImages = { navController.navigate(ScreenRoutes.UploadImageScreen) }
+                    onUploadImages = {
+                        val selectedImagesUris = imagePickerState.selectedImages.map { it.toString() }
+                        navController.navigate(ScreenRoutes.UploadImageResultsScreen(imagesUris = selectedImagesUris))
+                    }
                 )
             }
-        }
-        navigation<ScreenRoutes.AnalyzeImageNavGraph>(startDestination = ScreenRoutes.UploadImageScreen) {
-            composable<ScreenRoutes.UploadImageScreen> {
-
+            composable<ScreenRoutes.UploadImageResultsScreen> { backStackEntry ->
+                val uploadImagesRouteArgs: ScreenRoutes.UploadImageResultsScreen = backStackEntry.toRoute()
+                val imagesUris: List<Uri> = uploadImagesRouteArgs.imagesUris.map { it.toUri() }
+                // TODO()
             }
         }
     }

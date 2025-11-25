@@ -11,7 +11,7 @@ import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.unit.dp
 import com.glitchdev.almondanalyzer.ui.icons.AppIcons
 
-public val AppIcons.Camerafilled: ImageVector
+public val AppIcons.CameraFilled: ImageVector
     get() {
         if (_camerafilled != null) {
             return _camerafilled!!

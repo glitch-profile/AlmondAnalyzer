@@ -60,11 +60,11 @@ import com.glitchdev.almondanalyzer.ui.components.AppButtonDefaults
 import com.glitchdev.almondanalyzer.ui.components.AppIconButton
 import com.glitchdev.almondanalyzer.ui.components.CameraView
 import com.glitchdev.almondanalyzer.ui.icons.AppIcons
+import com.glitchdev.almondanalyzer.ui.icons.svgs.Back
 import com.glitchdev.almondanalyzer.ui.icons.svgs.Camera
+import com.glitchdev.almondanalyzer.ui.icons.svgs.CameraFilled
+import com.glitchdev.almondanalyzer.ui.icons.svgs.CameraRotate
 import com.glitchdev.almondanalyzer.ui.icons.svgs.CameraUnavailable
-import com.glitchdev.almondanalyzer.ui.icons.svgs.Camerafilled
-import com.glitchdev.almondanalyzer.ui.icons.svgs.Clear
-import com.glitchdev.almondanalyzer.ui.icons.svgs.Upload
 import com.glitchdev.almondanalyzer.ui.theme.AppTheme
 import com.glitchdev.almondanalyzer.ui.theme.appSpringDefault
 import java.io.File
@@ -349,7 +349,7 @@ private fun CameraControlsComponent(
             colors = sideButtonsColor
         ) {
             Icon(
-                imageVector = AppIcons.Clear,
+                imageVector = AppIcons.Back,
                 contentDescription = null
             )
         }
@@ -361,7 +361,7 @@ private fun CameraControlsComponent(
             colors = mainButtonColor
         ) {
             Icon(
-                imageVector = AppIcons.Camerafilled,
+                imageVector = AppIcons.CameraFilled,
                 contentDescription = null
             )
         }
@@ -373,7 +373,7 @@ private fun CameraControlsComponent(
             colors = sideButtonsColor
         ) {
             Icon(
-                imageVector = AppIcons.Upload,
+                imageVector = AppIcons.CameraRotate,
                 contentDescription = null
             )
         }
