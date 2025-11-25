@@ -43,6 +43,10 @@ import androidx.navigation.toRoute
 import com.glitchdev.almondanalyzer.core.presentation.navigationbar.NavigationBar
 import com.glitchdev.almondanalyzer.core.utils.ScreenRoutes
 import com.glitchdev.almondanalyzer.ui.components.AppSurface
+import com.glitchdev.almondanalyzer.ui.components.notification.NotificationController
+import com.glitchdev.almondanalyzer.ui.components.notification.ObserveAsEvents
+import com.glitchdev.almondanalyzer.ui.components.notification.SwipeableNotification
+import com.glitchdev.almondanalyzer.ui.components.notification.SwipeableNotificationState
 import com.glitchdev.almondanalyzer.ui.theme.AlmondAnalyzerTheme
 import com.glitchdev.almondanalyzer.ui.theme.AppTheme
 import com.glitchdev.almondanalyzer.uploadscreen.presentation.UploadScreen
@@ -129,6 +133,14 @@ class MainActivity : ComponentActivity() {
                             }
                         }
                     }
+
+                    val swipeableNotificationState = remember {
+                        SwipeableNotificationState()
+                    }
+                    ObserveAsEvents(NotificationController.notificationEvents) { event ->
+                        swipeableNotificationState.showNotification(event)
+                    }
+                    SwipeableNotification(swipeableNotificationState)
                 }
             }
         }

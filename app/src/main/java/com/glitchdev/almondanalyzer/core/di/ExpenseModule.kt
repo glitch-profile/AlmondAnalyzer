@@ -1,4 +1,4 @@
-package com.glitchdev.almondanalyzer.expenses.di
+package com.glitchdev.almondanalyzer.core.di
 
 import com.glitchdev.almondanalyzer.core.data.db.AppDatabase
 import com.glitchdev.almondanalyzer.expenses.data.ExpenseRepositoryImpl
