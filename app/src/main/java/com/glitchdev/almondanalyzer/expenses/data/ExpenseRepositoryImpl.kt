@@ -17,8 +17,8 @@ class ExpenseRepositoryImpl(
         return expenseDao.getAllExpensesForField(fieldId)
     }
 
-    override suspend fun addExpense(expense: Expense) {
-        expenseDao.insertExpense(expense)
+    override suspend fun addExpense(expense: Expense): Long {
+        return expenseDao.insertExpense(expense)
     }
 
     override suspend fun deleteExpense(expense: Expense) {
