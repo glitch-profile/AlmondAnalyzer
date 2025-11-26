@@ -1,9 +1,7 @@
 package com.glitchdev.almondanalyzer.expenses.data
 
 import com.glitchdev.almondanalyzer.expenses.domain.ExpenseRepository
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.onEach
 
 class ExpenseRepositoryImpl(
     private val expenseDao: ExpenseDao
@@ -11,9 +9,12 @@ class ExpenseRepositoryImpl(
 
     private val cachedExpenses = MutableStateFlow<List<Expense>>(emptyList())
 
-    override fun getAllExpenses(): Flow<List<Expense>> {
+    override suspend fun getAllExpenses(): List<Expense> {
         return expenseDao.getAllExpenses()
-            .onEach { cachedExpenses.value = it }
+    }
+
+    override suspend fun getAllExpensesForField(fieldId: Long): List<Expense> {
+        return expenseDao.getAllExpensesForField(fieldId)
     }
 
     override suspend fun addExpense(expense: Expense) {
