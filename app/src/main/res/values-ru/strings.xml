@@ -43,6 +43,9 @@
     <!--JUMP TO START-->
     <string name="components_jump_to_top_text">Вернуться в начало</string>
     <string name="components_jump_to_bottom_text">Вернуться вниз</string>
+    <!--EXPANDABLE TEXT-->
+    <string name="components_expandable_text_show_less">Скрыть</string>
+    <string name="components_expandable_text_show_more">Развернуть</string>
     <!--LOADING-->
     <string name="components_loading_text">Загрузка…</string>
 </resources>

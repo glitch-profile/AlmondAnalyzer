@@ -40,6 +40,9 @@
     <!--JUMP TO START-->
     <string name="components_jump_to_top_text">Return to top</string>
     <string name="components_jump_to_bottom_text">Return to bottom</string>
+    <!--EXPANDABLE TEXT-->
+    <string name="components_expandable_text_show_less">Show less</string>
+    <string name="components_expandable_text_show_more">Show more</string>
     <!--LOADING-->
     <string name="components_loading_text">Loading…</string>
 
