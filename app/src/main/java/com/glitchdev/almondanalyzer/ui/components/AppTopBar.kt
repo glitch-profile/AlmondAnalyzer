@@ -124,8 +124,8 @@ object AppTopBarDefaults {
 
     @Composable
     private fun _colors() = AppTopBarColors(
-        contentColor = AppTheme.colorsScheme.onSurface,
-        containerColor = AppTheme.colorsScheme.surface
+        contentColor = AppTheme.colorScheme.onSurface,
+        containerColor = AppTheme.colorScheme.surface
     )
 
     @Composable
