@@ -3,6 +3,8 @@
     <string name="app_name">Анализатор Миндаля</string>
 
     <!-- SCREEN TITLES -->
+    <string name="fields_screen_title">Поля</string>
+    <string name="expenses_screen_title">Работы</string>
     <string name="recents_screen_title">История</string>
     <string name="analyze_screen_title">Анализ</string>
 

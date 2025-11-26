@@ -2,6 +2,8 @@
     <string name="app_name">Almond Analyzer</string>
 
     <!-- SCREEN TITLES -->
+    <string name="fields_screen_title">Fields</string>
+    <string name="expenses_screen_title">Expenses</string>
     <string name="recents_screen_title">Recents</string>
     <string name="analyze_screen_title">Analyze</string>
 

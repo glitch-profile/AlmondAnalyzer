@@ -119,9 +119,14 @@ class MainActivity : ComponentActivity() {
                             ) {
                                 NavigationBar(
                                     currentNavGraph = currentNavGraph,
-                                    onNavigateToRecentsScreen = {
-                                        navController.navigate(ScreenRoutes.RecentsNavGraph) {
-                                            popUpTo(ScreenRoutes.RecentsNavGraph) { inclusive = true }
+                                    onNavigateToFieldsScreen = {
+                                        navController.navigate(ScreenRoutes.FieldsNavGraph) {
+                                            popUpTo(ScreenRoutes.FieldsNavGraph) { inclusive = true }
+                                        }
+                                    },
+                                    onNavigateToExpensesScreen = {
+                                        navController.navigate(ScreenRoutes.ExpensesNavGraph) {
+                                            popUpTo(ScreenRoutes.ExpensesNavGraph) { inclusive = true }
                                         }
                                     },
                                     onNavigateToAnalyzeScreen = {
@@ -151,7 +156,7 @@ class MainActivity : ComponentActivity() {
 private fun ScreensContent(
     navController: NavHostController
 ) {
-    val startDestination = ScreenRoutes.RecentsNavGraph
+    val startDestination = ScreenRoutes.FieldsNavGraph
 
     NavHost(
         modifier = Modifier
@@ -159,11 +164,21 @@ private fun ScreensContent(
         navController = navController,
         startDestination = startDestination
     ) {
-        navigation<ScreenRoutes.RecentsNavGraph>(startDestination = ScreenRoutes.RecentImagesScreen) {
-            composable<ScreenRoutes.RecentImagesScreen> {
+        navigation<ScreenRoutes.FieldsNavGraph>(startDestination = ScreenRoutes.AllFieldsScreen) {
+            composable<ScreenRoutes.AllFieldsScreen> {
 
             }
         }
+        navigation<ScreenRoutes.ExpensesNavGraph>(startDestination = ScreenRoutes.ExpensesScreen) {
+            composable<ScreenRoutes.ExpensesScreen> {
+
+            }
+        }
+//        navigation<ScreenRoutes.RecentsNavGraph>(startDestination = ScreenRoutes.RecentImagesScreen) {
+//            composable<ScreenRoutes.RecentImagesScreen> {
+//
+//            }
+//        }
         navigation<ScreenRoutes.AnalyzeImageNavGraph>(startDestination = ScreenRoutes.UploadImageScreen) {
             composable<ScreenRoutes.UploadImageScreen> {
                 val uploadScreenViewModel: UploadScreenViewModel = koinViewModel()
