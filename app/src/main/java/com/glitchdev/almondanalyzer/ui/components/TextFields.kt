@@ -302,7 +302,7 @@ object AppTextFieldDefaults {
     fun textStyle() = AppTheme.typography.bodyLarge
 
     @Composable
-    fun shape() = AppTheme.shape.large
+    fun shape() = AppTheme.shape.small
 
     val minTextHeight = 56.dp
 
