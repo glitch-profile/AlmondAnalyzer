@@ -44,6 +44,8 @@ import com.glitchdev.almondanalyzer.core.presentation.navigationbar.NavigationBa
 import com.glitchdev.almondanalyzer.core.utils.ScreenRoutes
 import com.glitchdev.almondanalyzer.fields.presentation.allfields.FieldsScreen
 import com.glitchdev.almondanalyzer.fields.presentation.allfields.FieldsScreenViewModel
+import com.glitchdev.almondanalyzer.fields.presentation.editfield.EditFieldScreen
+import com.glitchdev.almondanalyzer.fields.presentation.editfield.EditFieldViewModel
 import com.glitchdev.almondanalyzer.ui.components.AppSurface
 import com.glitchdev.almondanalyzer.ui.components.notification.NotificationController
 import com.glitchdev.almondanalyzer.ui.components.notification.ObserveAsEvents
@@ -188,6 +190,27 @@ private fun ScreensContent(
             composable<ScreenRoutes.EditFieldScreen> { backStackEntry ->
                 val editFieldScreenArgs: ScreenRoutes.EditFieldScreen = backStackEntry.toRoute()
                 val fieldId = editFieldScreenArgs.fieldId
+
+                val viewModel: EditFieldViewModel = koinViewModel()
+                val state by viewModel.state.collectAsState()
+
+                LaunchedEffect(fieldId) {
+                    viewModel.loadFieldData(fieldId)
+                }
+                EditFieldScreen(
+                    state = state,
+                    onNameChange = viewModel::updateName,
+                    onVarietyChange = viewModel::updateVariety,
+                    onCadastralNumberChange = viewModel::updateCadastralNumber,
+                    onPlantingYearChange = viewModel::updatePlantingYear,
+                    onAddRow = viewModel::addSeedlingsRow,
+                    onEditRow = viewModel::editSeedlingCountForRow,
+                    onRemoveRow = viewModel::removeSeedlingsRow,
+                    onBackClicked = { navController.popBackStack() },
+                    onUpdateFieldClicked = { viewModel.updateField {  } },
+                    onAddFieldClicked = { viewModel.addField {  } },
+                    onResetToDefaults = viewModel::resetToDefault
+                )
             }
         }
         navigation<ScreenRoutes.ExpensesNavGraph>(startDestination = ScreenRoutes.ExpensesScreen) {

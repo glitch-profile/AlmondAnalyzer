@@ -3,6 +3,8 @@
 
     <!-- SCREEN TITLES -->
     <string name="fields_screen_title">Fields</string>
+    <string name="edit_field_screen_title">Edit field</string>
+    <string name="add_field_screen_title">Add field</string>
     <string name="expenses_screen_title">Expenses</string>
     <string name="recents_screen_title">Recents</string>
     <string name="analyze_screen_title">Analyze</string>
@@ -22,15 +24,26 @@
     <string name="fields_screen_no_fields_title">Looks empty…</string>
     <string name="fields_screen_no_fields_text">Let\'s create your first field to track seedlings and expenses</string>
     <string name="fields_screen_add_title_button_label">Create field</string>
+    <!-- EDIT FIELD -->
+    <string name="edit_field_add_new_field_button_label">Add new field</string>
+    <string name="edit_field_update_field_button_label">Update this field</string>
+    <string name="edit_field_reset_defaults_button_label">Reset</string>
+    <string name="edit_field_name_label">Field name</string>
+    <string name="edit_field_variety_label">Variety</string>
+    <string name="edit_field_year_label">Planting year</string>
+    <string name="edit_field_cadastral_num_label">Cadastral number</string>
+    <string name="edit_field_seedlings_rows_label">Seedlings rows</string>
+    <string name="edit_field_seedlings_rows_add_button_label">Add seedlings row</string>
+    <string name="edit_field_seedlings_rows_row_prefix_label">Row</string>
     <!-- ERRORS -->
-    <string name="add_fields_screen_error_empty_fields_title">Please fill in all fields</string>
-    <string name="add_fields_screen_error_incorrect_year_title">Incorrect planting year</string>
-    <string name="add_fields_screen_error_incorrect_scheme_title">Incorrect planting scheme</string>
-    <string name="add_fields_screen_error_unknown_title">Unknown error</string>
-    <string name="add_fields_screen_error_empty_fields_text">Please provide all the details to add the field</string>
-    <string name="add_fields_screen_error_incorrect_year_text">The planting year cannot be greater than the current year and less than zero</string>
-    <string name="add_fields_screen_error_incorrect_scheme_text">Unable to process current planting scheme</string>
-    <string name="add_fields_screen_error_unknown_text">An error occurred while adding the field.\nError code:</string>
+    <string name="edit_field_error_empty_fields_title">Please fill in all fields</string>
+    <string name="edit_field_error_incorrect_year_title">Incorrect planting year</string>
+    <string name="edit_field_error_incorrect_scheme_title">Incorrect planting scheme</string>
+    <string name="edit_field_error_unknown_title">Unknown error</string>
+    <string name="edit_field_error_empty_fields_text">Please provide all the details to add the field</string>
+    <string name="edit_field_error_incorrect_year_text">The planting year cannot be greater than the current year and less than zero</string>
+    <string name="edit_field_error_incorrect_scheme_text">Unable to process current planting scheme</string>
+    <string name="edit_field_error_unknown_text">An error occurred while adding the field.\nError code:</string>
 
     <!-- UPLOAD IMAGE SCREEN -->
     <!-- CAMERA COMPONENT -->

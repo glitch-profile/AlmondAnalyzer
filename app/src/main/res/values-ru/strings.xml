@@ -4,6 +4,8 @@
 
     <!-- SCREEN TITLES -->
     <string name="fields_screen_title">Поля</string>
+    <string name="edit_field_screen_title">Редактировать поле</string>
+    <string name="add_field_screen_title">Добавить поле</string>
     <string name="expenses_screen_title">Работы</string>
     <string name="recents_screen_title">История</string>
     <string name="analyze_screen_title">Анализ</string>
@@ -23,15 +25,26 @@
     <string name="fields_screen_no_fields_title">Пока что тут пусто…</string>
     <string name="fields_screen_no_fields_text">Давайте создадим Ваше первое поле для учета саженцев и затрат</string>
     <string name="fields_screen_add_title_button_label">Добавить поле</string>
+    <!-- EDIT FIELD -->
+    <string name="edit_field_add_new_field_button_label">Создать новое поле</string>
+    <string name="edit_field_update_field_button_label">Обновить это поле</string>
+    <string name="edit_field_reset_defaults_button_label">Сбросить</string>
+    <string name="edit_field_name_label">Наименование</string>
+    <string name="edit_field_variety_label">Основная культура</string>
+    <string name="edit_field_year_label">Год посадки</string>
+    <string name="edit_field_cadastral_num_label">Кадастровый номер</string>
+    <string name="edit_field_seedlings_rows_label">Разметка саженцев</string>
+    <string name="edit_field_seedlings_rows_add_button_label">Добавить ряд саженцев</string>
+    <string name="edit_field_seedlings_rows_row_prefix_label">Ряд</string>
     <!-- ERRORS -->
-    <string name="add_fields_screen_error_empty_fields_title">Заполните все поля</string>
-    <string name="add_fields_screen_error_incorrect_year_title">Неверный год посадки</string>
-    <string name="add_fields_screen_error_incorrect_scheme_title">Неверная схема семян</string>
-    <string name="add_fields_screen_error_unknown_title">Неизвестная ошибка</string>
-    <string name="add_fields_screen_error_empty_fields_text">Пожалуйста, укажите все данные для добавления поля</string>
-    <string name="add_fields_screen_error_incorrect_year_text">Год посадки не может быть больше текущего и меньше нуля</string>
-    <string name="add_fields_screen_error_incorrect_scheme_text">Невозможно обработать схему посадки деревьев</string>
-    <string name="add_fields_screen_error_unknown_text">Возникла ошибка во время добавления поля.\nКод ошибки:</string>
+    <string name="edit_field_error_empty_fields_title">Заполните все поля</string>
+    <string name="edit_field_error_incorrect_year_title">Неверный год посадки</string>
+    <string name="edit_field_error_incorrect_scheme_title">Неверная схема семян</string>
+    <string name="edit_field_error_unknown_title">Неизвестная ошибка</string>
+    <string name="edit_field_error_empty_fields_text">Пожалуйста, укажите все данные для добавления поля</string>
+    <string name="edit_field_error_incorrect_year_text">Год посадки не может быть больше текущего и меньше нуля</string>
+    <string name="edit_field_error_incorrect_scheme_text">Невозможно обработать схему посадки деревьев</string>
+    <string name="edit_field_error_unknown_text">Возникла ошибка во время добавления поля.\nКод ошибки:</string>
 
 
     <!-- UPLOAD IMAGE SCREEN -->
