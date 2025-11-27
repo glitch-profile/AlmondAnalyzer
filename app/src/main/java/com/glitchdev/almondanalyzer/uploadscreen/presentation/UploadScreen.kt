@@ -8,6 +8,7 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.animateIntAsState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -25,6 +26,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -133,7 +135,11 @@ fun UploadScreen(
             )
         }
         if (cameraWindowHeight != maxScreenHeight) {
-            var bottomMenuHeight by remember { mutableStateOf(0.dp) }
+            var bottomMenuHeight by remember { mutableIntStateOf(0) }
+            val bottomHeightPadding by animateIntAsState(
+                targetValue = if (imagePickerState.selectedImages.isNotEmpty()) bottomMenuHeight else 0,
+                animationSpec = appSpringDefault()
+            )
             val density = LocalDensity.current
             AppTextDivider(
                 modifier = Modifier
@@ -152,7 +158,7 @@ fun UploadScreen(
                 ImagePicker(
                     modifier = Modifier
                         .fillMaxSize(),
-                    contentPadding = PaddingValues(bottom = bottomMenuHeight),
+                    contentPadding = PaddingValues(bottom = with(density) { bottomHeightPadding.toDp() }),
                     state = imagePickerState,
                     onHideTempOnlyWarning = onHideTempOnlyWarning,
                     onRefreshImagesList = onUpdateImagesList,
@@ -166,7 +172,7 @@ fun UploadScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .onSizeChanged { newSize ->
-                            bottomMenuHeight = with(density) { newSize.height.toDp() }
+                            bottomMenuHeight = newSize.height
                         }
                 ) {
                     UploadButtonsMenu(
@@ -222,8 +228,7 @@ private fun UploadButtonsMenu(
                 .height(48.dp)
                 .weight(1f),
             enabled = selectedImages.isNotEmpty(),
-            onClick = onUploadImages,
-            shape = AppButtonDefaults.shape()
+            onClick = onUploadImages
         ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally
