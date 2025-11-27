@@ -135,7 +135,8 @@ private fun FieldListComponent(
             contentPadding = PaddingValues(
                 top = AppTheme.size.medium,
                 bottom = with(density) { addButtonHeight.toDp() }
-            )
+            ),
+            verticalArrangement = Arrangement.spacedBy(AppTheme.size.small)
         ) {
             items(
                 items = fields,
@@ -143,8 +144,7 @@ private fun FieldListComponent(
             ) { field ->
                 FieldCard(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = AppTheme.size.small),
+                        .fillMaxWidth(),
                     field = field,
                     isOptionsOpened = field.id == selectedFieldId,
                     onOpenOptions = onSelectField,
@@ -165,9 +165,9 @@ private fun FieldListComponent(
         ) {
             AppButton(
                 modifier = Modifier
-                    .padding(horizontal = AppTheme.size.medium)
                     .padding(
-                        bottom = AppTheme.size.medium
+                        horizontal = AppTheme.size.medium,
+                        vertical = AppTheme.size.medium
                     )
                     .fillMaxWidth()
                     .height(48.dp),

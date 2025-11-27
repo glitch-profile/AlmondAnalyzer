@@ -115,7 +115,7 @@ object AppTopBarDefaults {
     )
 
     @Composable
-    fun defaultTextStyle() = AppTheme.typography.titleSmall
+    fun defaultTextStyle() = AppTheme.typography.titleMedium
 
     data class AppTopBarColors(
         val contentColor: Color,
