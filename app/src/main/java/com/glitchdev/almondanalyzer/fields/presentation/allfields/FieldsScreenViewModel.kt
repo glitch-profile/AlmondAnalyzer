@@ -28,62 +28,7 @@ class FieldsScreenViewModel(
         if (fieldsState.value.isLoading) return
         viewModelScope.launch {
             _fieldsState.update { it.copy(isLoading = true) }
-//            val fieldsData = fieldsRepository.getAllFields()
-            val fieldsData = listOf<Field>(
-                Field(
-                    id = 1,
-                    name = "Основной на продажу",
-                    variety = "Миндаль",
-                    cadastralNumber = "00:12:234546:87",
-                    plantingScheme = "---|---|---",
-                    plantingYear = 2022,
-                    seedlingsCount = 90
-                ),
-                Field(
-                    id = 2,
-                    name = "Огород юг",
-                    variety = "Яблоки",
-                    cadastralNumber = "00:12:234546:87",
-                    plantingScheme = "---|---|---",
-                    plantingYear = 2024,
-                    seedlingsCount = 88
-                ),
-                Field(
-                    id = 3,
-                    name = "Тестовый запад",
-                    variety = "Черешня",
-                    cadastralNumber = "00:12:234546:87",
-                    plantingScheme = "---|---|---",
-                    plantingYear = 2021,
-                    seedlingsCount = 150
-                ),Field(
-                    id = 4,
-                    name = "Запаска",
-                    variety = "Фрукты",
-                    cadastralNumber = "00:12:234546:87",
-                    plantingScheme = "---|---|---",
-                    plantingYear = 2023,
-                    seedlingsCount = 45
-                ),
-                Field(
-                    id = 5,
-                    name = "Запасной миндаль",
-                    variety = "Миндаль",
-                    cadastralNumber = "00:12:234546:87",
-                    plantingScheme = "---|---|---",
-                    plantingYear = 2019,
-                    seedlingsCount = 112
-                ),
-                Field(
-                    id = 6,
-                    name = "Основной на западе",
-                    variety = "Вишня",
-                    cadastralNumber = "00:12:234546:87",
-                    plantingScheme = "---|---|---",
-                    plantingYear = 2025,
-                    seedlingsCount = 92
-                )
-            )
+            val fieldsData = fieldsRepository.getAllFields()
             _fieldsState.update {
                 it.copy(
                     isLoading = false,
@@ -130,32 +75,32 @@ class FieldsScreenViewModel(
                     is EmptyFieldValuesException -> {
                         NotificationController.sendEvent(
                             NotificationAction(
-                                titleRes = R.string.add_fields_screen_error_empty_fields_title,
-                                messageRes = R.string.add_fields_screen_error_empty_fields_text
+                                titleRes = R.string.edit_field_error_empty_fields_title,
+                                messageRes = R.string.edit_field_error_empty_fields_text
                             )
                         )
                     }
                     is IncorrectFieldPlantingYearException -> {
                         NotificationController.sendEvent(
                             NotificationAction(
-                                titleRes = R.string.add_fields_screen_error_incorrect_year_title,
-                                messageRes = R.string.add_fields_screen_error_incorrect_year_text
+                                titleRes = R.string.edit_field_error_incorrect_year_title,
+                                messageRes = R.string.edit_field_error_incorrect_year_text
                             )
                         )
                     }
                     is IncorrectFieldPlantingSchemeException -> {
                         NotificationController.sendEvent(
                             NotificationAction(
-                                titleRes = R.string.add_fields_screen_error_incorrect_scheme_title,
-                                messageRes = R.string.add_fields_screen_error_incorrect_scheme_text
+                                titleRes = R.string.edit_field_error_incorrect_scheme_title,
+                                messageRes = R.string.edit_field_error_incorrect_scheme_text
                             )
                         )
                     }
                     else -> {
                         NotificationController.sendEvent(
                             NotificationAction(
-                                titleRes = R.string.add_fields_screen_error_unknown_title,
-                                messageRes = R.string.add_fields_screen_error_unknown_text
+                                titleRes = R.string.edit_field_error_unknown_title,
+                                messageRes = R.string.edit_field_error_unknown_text
                             )
                         )
                     }
@@ -193,32 +138,32 @@ class FieldsScreenViewModel(
                     is EmptyFieldValuesException -> {
                         NotificationController.sendEvent(
                             NotificationAction(
-                                titleRes = R.string.add_fields_screen_error_empty_fields_title,
-                                messageRes = R.string.add_fields_screen_error_empty_fields_text
+                                titleRes = R.string.edit_field_error_empty_fields_title,
+                                messageRes = R.string.edit_field_error_empty_fields_text
                             )
                         )
                     }
                     is IncorrectFieldPlantingYearException -> {
                         NotificationController.sendEvent(
                             NotificationAction(
-                                titleRes = R.string.add_fields_screen_error_incorrect_year_title,
-                                messageRes = R.string.add_fields_screen_error_incorrect_year_text
+                                titleRes = R.string.edit_field_error_incorrect_year_title,
+                                messageRes = R.string.edit_field_error_incorrect_year_text
                             )
                         )
                     }
                     is IncorrectFieldPlantingSchemeException -> {
                         NotificationController.sendEvent(
                             NotificationAction(
-                                titleRes = R.string.add_fields_screen_error_incorrect_scheme_title,
-                                messageRes = R.string.add_fields_screen_error_incorrect_scheme_text
+                                titleRes = R.string.edit_field_error_incorrect_scheme_title,
+                                messageRes = R.string.edit_field_error_incorrect_scheme_text
                             )
                         )
                     }
                     else -> {
                         NotificationController.sendEvent(
                             NotificationAction(
-                                titleRes = R.string.add_fields_screen_error_unknown_title,
-                                messageRes = R.string.add_fields_screen_error_unknown_text
+                                titleRes = R.string.edit_field_error_unknown_title,
+                                messageRes = R.string.edit_field_error_unknown_text
                             )
                         )
                     }
