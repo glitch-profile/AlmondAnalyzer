@@ -7,6 +7,31 @@
     <string name="recents_screen_title">Recents</string>
     <string name="analyze_screen_title">Analyze</string>
 
+    <!-- FIELDS SCREEN -->
+    <!-- FIELD CARD -->
+    <string name="field_card_field_name_title">field name</string>
+    <string name="field_card_field_variety_title">variety</string>
+    <string name="field_card_field_year_title">year</string>
+    <string name="field_card_field_cadastral_num_title">cadastral number</string>
+    <string name="field_card_field_seedlings_count_title">seedlings</string>
+    <string name="field_card_field_delete_field_button_label">Delete</string>
+    <string name="field_card_field_sure_delete_field_button_label">Are you sure?</string>
+    <string name="field_card_field_edit_field_button_label">Edit</string>
+    <string name="field_card_field_open_field_button_label">Details</string>
+    <!-- ALL FIELDS -->
+    <string name="fields_screen_no_fields_title">Looks empty…</string>
+    <string name="fields_screen_no_fields_text">Let\'s create your first field to track seedlings and expenses</string>
+    <string name="fields_screen_add_title_button_label">Create field</string>
+    <!-- ERRORS -->
+    <string name="add_fields_screen_error_empty_fields_title">Please fill in all fields</string>
+    <string name="add_fields_screen_error_incorrect_year_title">Incorrect planting year</string>
+    <string name="add_fields_screen_error_incorrect_scheme_title">Incorrect planting scheme</string>
+    <string name="add_fields_screen_error_unknown_title">Unknown error</string>
+    <string name="add_fields_screen_error_empty_fields_text">Please provide all the details to add the field</string>
+    <string name="add_fields_screen_error_incorrect_year_text">The planting year cannot be greater than the current year and less than zero</string>
+    <string name="add_fields_screen_error_incorrect_scheme_text">Unable to process current planting scheme</string>
+    <string name="add_fields_screen_error_unknown_text">An error occurred while adding the field.\nError code:</string>
+
     <!-- UPLOAD IMAGE SCREEN -->
     <!-- CAMERA COMPONENT -->
     <string name="upload_image_camera_component_camera_not_ready_title">Camera unavailable</string>
@@ -34,6 +59,7 @@
     <string name="upload_image_import_clear_selection_label">Clear selection</string>
     <string name="upload_image_import_upload_images_label">Upload images</string>
     <plurals name="upload_image_import_upload_images_sublabel">
+        <item quantity="other">%d photos selected</item>
         <item quantity="one">%d photo selected</item>
         <item quantity="many">%d photos selected</item>
     </plurals>

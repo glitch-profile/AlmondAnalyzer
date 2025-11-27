@@ -6,7 +6,8 @@ object ScreenRoutes {
 
     @Serializable object FieldsNavGraph
     @Serializable object AllFieldsScreen
-    @Serializable data class EditFieldScreen(val fieldId: Long)
+    @Serializable data class FieldInfoScreen(val fieldId: Long)
+    @Serializable data class EditFieldScreen(val fieldId: Long?)
 
     @Serializable object ExpensesNavGraph
     @Serializable object ExpensesScreen

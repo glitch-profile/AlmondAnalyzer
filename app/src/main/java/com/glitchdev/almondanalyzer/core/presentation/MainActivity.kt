@@ -42,6 +42,8 @@ import androidx.navigation.navigation
 import androidx.navigation.toRoute
 import com.glitchdev.almondanalyzer.core.presentation.navigationbar.NavigationBar
 import com.glitchdev.almondanalyzer.core.utils.ScreenRoutes
+import com.glitchdev.almondanalyzer.fields.presentation.allfields.FieldsScreen
+import com.glitchdev.almondanalyzer.fields.presentation.allfields.FieldsScreenViewModel
 import com.glitchdev.almondanalyzer.ui.components.AppSurface
 import com.glitchdev.almondanalyzer.ui.components.notification.NotificationController
 import com.glitchdev.almondanalyzer.ui.components.notification.ObserveAsEvents
@@ -166,7 +168,26 @@ private fun ScreensContent(
     ) {
         navigation<ScreenRoutes.FieldsNavGraph>(startDestination = ScreenRoutes.AllFieldsScreen) {
             composable<ScreenRoutes.AllFieldsScreen> {
-
+                val viewModel: FieldsScreenViewModel = koinViewModel()
+                val state by viewModel.fieldsState.collectAsState()
+                FieldsScreen(
+                    state = state,
+                    onUpdateFieldsInfo = viewModel::loadFields,
+                    onSelectField = { viewModel.selectField(it) },
+                    onUnselectField = { viewModel.selectField(null) },
+                    onOpenFieldInfoClicked = { navController.navigate(ScreenRoutes.FieldInfoScreen(it)) },
+                    onAddNewFieldClicked = { navController.navigate(ScreenRoutes.EditFieldScreen(null)) },
+                    onEditFieldClicked = { navController.navigate(ScreenRoutes.EditFieldScreen(it)) },
+                    onDeleteFieldClicked = viewModel::deleteField
+                )
+            }
+            composable<ScreenRoutes.FieldInfoScreen> { backStackEntry ->
+                val fieldInfoArgs: ScreenRoutes.FieldInfoScreen = backStackEntry.toRoute()
+                val fieldId = fieldInfoArgs.fieldId
+            }
+            composable<ScreenRoutes.EditFieldScreen> { backStackEntry ->
+                val editFieldScreenArgs: ScreenRoutes.EditFieldScreen = backStackEntry.toRoute()
+                val fieldId = editFieldScreenArgs.fieldId
             }
         }
         navigation<ScreenRoutes.ExpensesNavGraph>(startDestination = ScreenRoutes.ExpensesScreen) {
