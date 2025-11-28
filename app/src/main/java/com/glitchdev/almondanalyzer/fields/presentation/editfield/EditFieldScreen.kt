@@ -48,6 +48,7 @@ import com.glitchdev.almondanalyzer.ui.components.LoadingComponent
 import com.glitchdev.almondanalyzer.ui.icons.AppIcons
 import com.glitchdev.almondanalyzer.ui.icons.svgs.Add
 import com.glitchdev.almondanalyzer.ui.icons.svgs.Back
+import com.glitchdev.almondanalyzer.ui.icons.svgs.Clear
 import com.glitchdev.almondanalyzer.ui.icons.svgs.Delete
 import com.glitchdev.almondanalyzer.ui.theme.AppTheme
 import com.glitchdev.almondanalyzer.ui.theme.appSpringDefault
@@ -340,37 +341,56 @@ private fun BottomButtonsComponents(
     onAddNewFieldClicked: () -> Unit,
     onResetToDefaults: () -> Unit
 ) {
-    Row(
+    Box(
         modifier = modifier,
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(AppTheme.size.medium)
     ) {
-        AppButton(
+        Row(
             modifier = Modifier
-                .padding(AppTheme.size.medium)
                 .fillMaxWidth()
-                .height(48.dp),
-            enabled = isMainButtonEnabled,
-            onClick = {
-                if (isAddingNewPost) onAddNewFieldClicked.invoke()
-                else onUpdateFieldClicked.invoke()
-            }
+                .padding(AppTheme.size.medium),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(AppTheme.size.medium)
         ) {
-            Text(
-                text = if (isAddingNewPost) stringResource(R.string.edit_field_add_new_field_button_label)
-                else stringResource(R.string.edit_field_update_field_button_label)
-            )
-            AnimatedVisibility(
-                visible = isUploadingField,
-                enter = expandHorizontally(appSpringDefault()),
-                exit = shrinkHorizontally(appSpringDefault())
+            AppIconButton(
+                modifier = Modifier
+                    .size(48.dp),
+                onClick = onResetToDefaults,
+                shape = AppButtonDefaults.shape(),
+                colors = AppButtonDefaults.textButtonColors(
+                    containerColor = AppTheme.colorScheme.surface.copy(0.8f)
+                )
             ) {
-                Column {
-                    Spacer(Modifier.width(AppTheme.size.medium))
-                    CircularProgressIndicator(
-                        color = LocalContentColor.current,
-                        strokeWidth = 3.dp
-                    )
+                Icon(
+                    imageVector = AppIcons.Clear,
+                    contentDescription = null
+                )
+            }
+            AppButton(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(48.dp),
+                enabled = isMainButtonEnabled,
+                onClick = {
+                    if (isAddingNewPost) onAddNewFieldClicked.invoke()
+                    else onUpdateFieldClicked.invoke()
+                }
+            ) {
+                Text(
+                    text = if (isAddingNewPost) stringResource(R.string.edit_field_add_new_field_button_label)
+                    else stringResource(R.string.edit_field_update_field_button_label)
+                )
+                AnimatedVisibility(
+                    visible = isUploadingField,
+                    enter = expandHorizontally(appSpringDefault()),
+                    exit = shrinkHorizontally(appSpringDefault())
+                ) {
+                    Column {
+                        Spacer(Modifier.width(AppTheme.size.medium))
+                        CircularProgressIndicator(
+                            color = LocalContentColor.current,
+                            strokeWidth = 3.dp
+                        )
+                    }
                 }
             }
         }

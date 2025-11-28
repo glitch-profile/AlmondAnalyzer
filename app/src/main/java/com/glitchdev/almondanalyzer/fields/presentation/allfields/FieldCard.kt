@@ -236,7 +236,7 @@ private fun TextGroup(
         Column {
             Text(
                 text = value,
-                style = AppTheme.typography.titleMedium,
+                style = AppTheme.typography.titleSmall,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
                 color = AppTheme.colorScheme.onSurface
@@ -246,7 +246,7 @@ private fun TextGroup(
                 style = AppTheme.typography.bodyMedium,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
-                color = AppTheme.colorScheme.onSurface
+                color = AppTheme.colorScheme.onSurfaceVariant
             )
         }
     }

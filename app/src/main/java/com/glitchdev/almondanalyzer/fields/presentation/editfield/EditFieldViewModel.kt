@@ -136,7 +136,12 @@ class EditFieldViewModel(
                     generateFieldModel()
                 val fieldId = fieldsRepository.addField(fieldToAdd)
                 val addedField = fieldsRepository.getFieldById(fieldId)
-                _state.update { it.copy(fieldData = addedField) }
+                _state.update {
+                    it.copy(
+                        fieldData = addedField,
+                        isAddingNewField = false
+                    )
+                }
                 if (addedField != null) {
                     onSuccess.invoke(addedField)
                 }
