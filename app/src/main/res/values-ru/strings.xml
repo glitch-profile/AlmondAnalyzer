@@ -4,6 +4,7 @@
 
     <!-- SCREEN TITLES -->
     <string name="fields_screen_title">Поля</string>
+    <string name="field_details_screen_title">Подробности</string>
     <string name="edit_field_screen_title">Редактировать поле</string>
     <string name="add_field_screen_title">Добавить поле</string>
     <string name="expenses_screen_title">Работы</string>
@@ -25,6 +26,22 @@
     <string name="fields_screen_no_fields_title">Пока что тут пусто…</string>
     <string name="fields_screen_no_fields_text">Давайте создадим Ваше первое поле для учета саженцев и затрат</string>
     <string name="fields_screen_add_title_button_label">Добавить поле</string>
+    <!-- FIELD DETAILS -->
+    <string name="field_details_general_section_title">Информация о поле</string>
+    <string name="field_details_field_name_title">Название поля</string>
+    <string name="field_details_field_variety_title">Посаженная культура</string>
+    <string name="field_details_field_year_title">Год посадки</string>
+    <string name="field_details_field_cadastral_num_title">Кадастровый номер</string>
+    <string name="field_details_field_seedlings_rows_section_title">Распределение рядов</string>
+    <string name="field_details_field_seedlings_row_title">Ряд</string>
+    <string name="field_details_field_seedlings_row_total_title">Всего</string>
+    <plurals name="field_details_field_seedling_count_text">
+        <item quantity="one">%d саженец</item>
+        <item quantity="few">%d саженца</item>
+        <item quantity="many">%d саженцев</item>
+        <item quantity="other">%d саженцев</item>
+    </plurals>
+    <string name="field_details_field_expenses_section_title">Затраты</string>
     <!-- EDIT FIELD -->
     <string name="edit_field_add_new_field_button_label">Создать новое поле</string>
     <string name="edit_field_update_field_button_label">Обновить это поле</string>

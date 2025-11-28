@@ -46,6 +46,8 @@ import com.glitchdev.almondanalyzer.fields.presentation.allfields.FieldsScreen
 import com.glitchdev.almondanalyzer.fields.presentation.allfields.FieldsScreenViewModel
 import com.glitchdev.almondanalyzer.fields.presentation.editfield.EditFieldScreen
 import com.glitchdev.almondanalyzer.fields.presentation.editfield.EditFieldViewModel
+import com.glitchdev.almondanalyzer.fields.presentation.fieldinfo.FieldInfoScreen
+import com.glitchdev.almondanalyzer.fields.presentation.fieldinfo.FieldInfoViewModel
 import com.glitchdev.almondanalyzer.ui.components.AppSurface
 import com.glitchdev.almondanalyzer.ui.components.notification.NotificationController
 import com.glitchdev.almondanalyzer.ui.components.notification.ObserveAsEvents
@@ -186,6 +188,20 @@ private fun ScreensContent(
             composable<ScreenRoutes.FieldInfoScreen> { backStackEntry ->
                 val fieldInfoArgs: ScreenRoutes.FieldInfoScreen = backStackEntry.toRoute()
                 val fieldId = fieldInfoArgs.fieldId
+
+                val viewModel: FieldInfoViewModel = koinViewModel()
+                val state by viewModel.fieldState.collectAsState()
+
+                LaunchedEffect(fieldId) { viewModel.loadDataForField(fieldId) }
+
+                FieldInfoScreen(
+                    state = state,
+                    onBackClicked = { navController.popBackStack() },
+                    onReloadClicked = { if (state.fieldInfo?.id != null) viewModel.loadDataForField(state.fieldInfo!!.id) },
+                    onOpenExpenseEditor = { TODO() },
+                    onCloseExpenseEditor = { TODO() },
+                    onAddExpense = { TODO() }
+                )
             }
             composable<ScreenRoutes.EditFieldScreen> { backStackEntry ->
                 val editFieldScreenArgs: ScreenRoutes.EditFieldScreen = backStackEntry.toRoute()

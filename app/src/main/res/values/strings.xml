@@ -3,6 +3,7 @@
 
     <!-- SCREEN TITLES -->
     <string name="fields_screen_title">Fields</string>
+    <string name="field_details_screen_title">Field details</string>
     <string name="edit_field_screen_title">Edit field</string>
     <string name="add_field_screen_title">Add field</string>
     <string name="expenses_screen_title">Expenses</string>
@@ -24,6 +25,21 @@
     <string name="fields_screen_no_fields_title">Looks empty…</string>
     <string name="fields_screen_no_fields_text">Let\'s create your first field to track seedlings and expenses</string>
     <string name="fields_screen_add_title_button_label">Create field</string>
+    <!-- FIELD DETAILS -->
+    <string name="field_details_general_section_title">Field info</string>
+    <string name="field_details_field_name_title">Field name</string>
+    <string name="field_details_field_variety_title">Variety</string>
+    <string name="field_details_field_year_title">Planting year</string>
+    <string name="field_details_field_cadastral_num_title">Cadastral number</string>
+    <string name="field_details_field_seedlings_rows_section_title">Seedlings rows</string>
+    <string name="field_details_field_seedlings_row_title">Row</string>
+    <string name="field_details_field_seedlings_row_total_title">Total</string>
+    <plurals name="field_details_field_seedling_count_text">
+        <item quantity="one">%d seedling</item>
+        <item quantity="many">%d seedlings</item>
+        <item quantity="other">%d seedlings</item>
+    </plurals>
+    <string name="field_details_field_expenses_section_title">Expenses</string>
     <!-- EDIT FIELD -->
     <string name="edit_field_add_new_field_button_label">Add new field</string>
     <string name="edit_field_update_field_button_label">Update this field</string>
