@@ -40,6 +40,29 @@
         <item quantity="other">%d seedlings</item>
     </plurals>
     <string name="field_details_field_expenses_section_title">Expenses</string>
+    <string name="field_details_field_expenses_default_description">No description</string>
+    <string name="field_details_field_expenses_total_text">Total amount for field</string>
+    <string name="field_details_field_no_expenses_text">Expenses for this field not found</string>
+    <string name="field_details_add_expense_button_label">Add expense</string>
+    <!-- EDIT EXPENSE COMPONENT -->
+    <string name="edit_expense_add_title">Expense creator</string>
+    <string name="edit_expense_update_title">Expense editor</string>
+    <string name="edit_expense_description_label">Description</string>
+    <string name="edit_expense_date_label">Expense date</string>
+    <string name="edit_expense_amount_label">Amount</string>
+    <string name="edit_expense_add_button_label">Save expense</string>
+    <string name="edit_expense_update_button_label">Update expense</string>
+    <string name="edit_expense_delete_button_label">Delete</string>
+    <!-- ERRORS -->
+    <string name="edit_expense_error_incorrect_amount_title">Incorrect expense amount</string>
+    <string name="edit_expense_error_incorrect_amount_text">The transaction amount cannot be negative</string>
+    <string name="edit_expense_error_incorrect_date_title">Incorrect date format</string>
+    <string name="edit_expense_error_incorrect_date_text">Invalid date format. Date must be in the "dd.MM.yyyy" format</string>
+    <string name="edit_expense_error_date_out_of_range_title">Date not available</string>
+    <string name="edit_expense_error_date_out_of_range_text">You can\'t plan expenses for the future</string>
+    <string name="edit_expense_error_unknown_title">Unknown error</string>
+    <string name="edit_expense_error_unknown_text">An error occurred while adding expense</string>
+
     <!-- EDIT FIELD -->
     <string name="edit_field_add_new_field_button_label">Add new field</string>
     <string name="edit_field_update_field_button_label">Update this field</string>
@@ -59,7 +82,7 @@
     <string name="edit_field_error_empty_fields_text">Please provide all the details to add the field</string>
     <string name="edit_field_error_incorrect_year_text">The planting year cannot be greater than the current year and less than zero</string>
     <string name="edit_field_error_incorrect_scheme_text">Unable to process current planting scheme</string>
-    <string name="edit_field_error_unknown_text">An error occurred while adding the field.\nError code:</string>
+    <string name="edit_field_error_unknown_text">An error occurred while adding the field</string>
 
     <!-- UPLOAD IMAGE SCREEN -->
     <!-- CAMERA COMPONENT -->

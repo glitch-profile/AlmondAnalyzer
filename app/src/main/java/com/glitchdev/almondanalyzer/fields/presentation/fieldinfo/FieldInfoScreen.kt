@@ -4,7 +4,9 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandHorizontally
 import androidx.compose.animation.shrinkHorizontally
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -23,11 +25,17 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -35,6 +43,7 @@ import androidx.compose.ui.unit.dp
 import com.glitchdev.almondanalyzer.R
 import com.glitchdev.almondanalyzer.expenses.data.Expense
 import com.glitchdev.almondanalyzer.fields.domain.Field
+import com.glitchdev.almondanalyzer.ui.components.AppButton
 import com.glitchdev.almondanalyzer.ui.components.AppButtonDefaults
 import com.glitchdev.almondanalyzer.ui.components.AppIconButton
 import com.glitchdev.almondanalyzer.ui.components.AppTopBar
@@ -54,9 +63,7 @@ fun FieldInfoScreen(
     state: FieldInfoState,
     onBackClicked: () -> Unit,
     onReloadClicked: () -> Unit,
-    onOpenExpenseEditor: () -> Unit,
-    onCloseExpenseEditor: () -> Unit,
-    onAddExpense: () -> Unit
+    onOpenExpenseEditor: (expenseId: Long?) -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -80,30 +87,49 @@ fun FieldInfoScreen(
                     Icon(imageVector = AppIcons.Back, contentDescription = null)
                 }
             },
-            actions = {
-
-                AppIconButton(
-                    onClick = onReloadClicked,
-                    colors = AppButtonDefaults.textButtonColors(
-                        contentColor = LocalContentColor.current
-                    )
-                ) {
-                    Icon(imageVector = AppIcons.Back, contentDescription = null)
-                }
-            }
+//            actions = {
+//                AppIconButton(
+//                    onClick = onReloadClicked,
+//                    colors = AppButtonDefaults.textButtonColors(
+//                        contentColor = LocalContentColor.current
+//                    )
+//                ) {
+//                    Icon(imageVector = AppIcons.Back, contentDescription = null)
+//                }
+//            }
         )
         if (state.isLoadingField && state.fieldInfo == null) {
             LoadingComponent(Modifier.fillMaxSize())
         } else if (state.fieldInfo != null) {
-            FieldInfoComponent(
+            Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(horizontal = AppTheme.size.medium),
-                contentPadding = PaddingValues(vertical = AppTheme.size.medium),
-                fieldInfo = state.fieldInfo,
-                isLoadingExpenses = state.isLoadingExpenses,
-                expenses = state.expenses,
-            )
+            ) {
+                val density = LocalDensity.current
+                var bottomButtonHeight by remember { mutableIntStateOf(0) }
+                FieldInfoComponent(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(horizontal = AppTheme.size.medium),
+                    contentPadding = PaddingValues(
+                        top =  AppTheme.size.medium,
+                        bottom = with(density) { bottomButtonHeight.toDp() }
+                    ),
+                    fieldInfo = state.fieldInfo,
+                    isLoadingExpenses = state.isLoadingExpenses,
+                    expenses = state.expenses,
+                    onOpenExpenseEditor = onOpenExpenseEditor
+                )
+                BottomButtonsComponents(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .onSizeChanged { size ->
+                            bottomButtonHeight = size.height
+                        }
+                        .align(Alignment.BottomStart),
+                    onAddExpenseClicked = { onOpenExpenseEditor.invoke(null) }
+                )
+            }
         } else {
             // ERROR SCREEN
         }
@@ -117,7 +143,8 @@ private fun FieldInfoComponent(
     contentPadding: PaddingValues,
     fieldInfo: Field,
     isLoadingExpenses: Boolean,
-    expenses: List<Expense>
+    expenses: List<Expense>,
+    onOpenExpenseEditor: (Long?) -> Unit
 ) {
     Column(
         modifier = modifier
@@ -223,22 +250,63 @@ private fun FieldInfoComponent(
                     color = AppTheme.colorScheme.primary
                 )
             }
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(2.dp)
-            ) {
-                val normalCorner = AppTheme.size.small
-                val smallCorner = AppTheme.size.extraSmall
-                expenses.forEachIndexed { index, expense ->
-                    val shape = if (index == 0) RoundedCornerShape(normalCorner, normalCorner, smallCorner, smallCorner)
-                    else RoundedCornerShape(smallCorner)
-                    ExpenseComponent(
-                        expense = expense,
-                        shape = shape
+            if (expenses.isNotEmpty()) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    verticalArrangement = Arrangement.spacedBy(2.dp)
+                ) {
+                    val normalCorner = AppTheme.size.small
+                    val smallCorner = AppTheme.size.extraSmall
+                    expenses.forEachIndexed { index, expense ->
+                        val shape = if (index == 0) RoundedCornerShape(normalCorner, normalCorner, smallCorner, smallCorner)
+                        else RoundedCornerShape(smallCorner)
+                        ExpenseComponent(
+                            expense = expense,
+                            shape = shape,
+                            onClicked = onOpenExpenseEditor
+                        )
+                    }
+                    val totalAmount by remember(expenses) { derivedStateOf { expenses.sumOf { it.amount } } }
+                    ExpenseTotalComponent(
+                        totalAmount = totalAmount,
+                        shape = RoundedCornerShape(smallCorner, smallCorner, normalCorner, normalCorner)
                     )
                 }
+            } else {
+                Text(
+                    text = stringResource(R.string.field_details_field_no_expenses_text),
+                    style = AppTheme.typography.bodyMedium
+                )
+            }
+        }
+    }
+}
 
+@Composable
+private fun BottomButtonsComponents(
+    modifier: Modifier = Modifier,
+    onAddExpenseClicked: () -> Unit
+) {
+    Box(
+        modifier = modifier,
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(AppTheme.size.medium),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(AppTheme.size.medium)
+        ) {
+            AppButton(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(48.dp),
+                onClick = onAddExpenseClicked
+            ) {
+                Text(
+                    text = stringResource(R.string.field_details_add_expense_button_label)
+                )
             }
         }
     }
@@ -284,9 +352,61 @@ private fun RowSeedlingCountComponent(
 @Composable
 private fun ExpenseComponent(
     expense: Expense,
+    shape: Shape,
+    onClicked: (expenseId: Long) -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(
+                color = AppTheme.colorScheme.background,
+                shape = shape
+            )
+            .clickable(
+                onClick = { onClicked.invoke(expense.id) }
+            )
+            .padding(
+                horizontal = AppTheme.size.medium,
+                vertical = AppTheme.size.small
+            ),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Column(
+            modifier = Modifier
+                .weight(1f)
+        ) {
+            Text(
+                text = expense.description.ifEmpty { stringResource(R.string.field_details_field_expenses_default_description) },
+                style = AppTheme.typography.bodyMedium,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                color = AppTheme.colorScheme.onSurface
+            )
+            Text(
+                text = expense.date,
+                style = AppTheme.typography.bodySmall,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                color = AppTheme.colorScheme.onSurfaceVariant
+            )
+        }
+        Spacer(Modifier.width(AppTheme.size.small))
+        Text(
+            text = "${String.format(Locale.getDefault(), " % .2f", expense.amount)} ₽",
+            style = AppTheme.typography.titleSmall,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            color = AppTheme.colorScheme.onSurface
+        )
+    }
+}
+
+@Composable
+private fun ExpenseTotalComponent(
+    totalAmount: Double,
     shape: Shape
 ) {
-    Column(
+    Row(
         modifier = Modifier
             .fillMaxWidth()
             .background(
@@ -296,74 +416,26 @@ private fun ExpenseComponent(
             .padding(
                 horizontal = AppTheme.size.medium,
                 vertical = AppTheme.size.small
-            )
+            ),
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        if (expense.description.isNotEmpty()) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-            ) {
-                Text(
-                    text = expense.description,
-                    style = AppTheme.typography.titleSmall,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    color = AppTheme.colorScheme.onSurface
-                )
-//                Text(
-//                    text = "Описание",
-//                    style = AppTheme.typography.bodyMedium,
-//                    maxLines = 1,
-//                    overflow = TextOverflow.Ellipsis,
-//                    color = AppTheme.colorScheme.onSurfaceVariant
-//                )
-            }
-        }
-        Spacer(Modifier.height(AppTheme.size.small))
-        Row(
+        Text(
             modifier = Modifier
-                .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Column(
-                modifier = Modifier
-                    .weight(2f)
-            ) {
-                Text(
-                    text = String.format(Locale.getDefault(), "%.2f", expense.amount),
-                    style = AppTheme.typography.titleSmall,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    color = AppTheme.colorScheme.onSurface
-                )
-//                Text(
-//                    text = "Сумма",
-//                    style = AppTheme.typography.bodyMedium,
-//                    maxLines = 1,
-//                    overflow = TextOverflow.Ellipsis,
-//                    color = AppTheme.colorScheme.onSurfaceVariant
-//                )
-            }
-            Column(
-                modifier = Modifier
-                    .weight(1f)
-            ) {
-                Text(
-                    text = expense.date,
-                    style = AppTheme.typography.titleSmall,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    color = AppTheme.colorScheme.onSurface
-                )
-//                Text(
-//                    text = "Дата списания",
-//                    style = AppTheme.typography.bodyMedium,
-//                    maxLines = 1,
-//                    overflow = TextOverflow.Ellipsis,
-//                    color = AppTheme.colorScheme.onSurfaceVariant
-//                )
-            }
-        }
+                .weight(1f),
+            text = stringResource(R.string.field_details_field_expenses_total_text),
+            style = AppTheme.typography.bodyMedium,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            color = AppTheme.colorScheme.onSurface
+        )
+        Spacer(Modifier.width(AppTheme.size.small))
+        Text(
+            text = "${String.format(Locale.getDefault(), " % .2f", totalAmount)} ₽",
+            style = AppTheme.typography.titleSmall,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            color = AppTheme.colorScheme.onSurface
+        )
     }
 }
 

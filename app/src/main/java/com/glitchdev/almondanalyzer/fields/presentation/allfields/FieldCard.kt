@@ -169,7 +169,7 @@ fun FieldCard(
                     modifier = Modifier
                         .fillMaxWidth()
                         .background(AppTheme.colorScheme.background)
-                        .padding(AppTheme.size.medium),
+                        .padding(AppTheme.size.small),
                     horizontalArrangement = Arrangement.spacedBy(AppTheme.size.medium)
                 ) {
                     var isSureAboutDelete by remember { mutableStateOf(false) }

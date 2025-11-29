@@ -48,6 +48,7 @@ import com.glitchdev.almondanalyzer.fields.presentation.editfield.EditFieldScree
 import com.glitchdev.almondanalyzer.fields.presentation.editfield.EditFieldViewModel
 import com.glitchdev.almondanalyzer.fields.presentation.fieldinfo.FieldInfoScreen
 import com.glitchdev.almondanalyzer.fields.presentation.fieldinfo.FieldInfoViewModel
+import com.glitchdev.almondanalyzer.fields.presentation.fieldinfo.editexpense.EditExpenseComponent
 import com.glitchdev.almondanalyzer.ui.components.AppSurface
 import com.glitchdev.almondanalyzer.ui.components.notification.NotificationController
 import com.glitchdev.almondanalyzer.ui.components.notification.ObserveAsEvents
@@ -190,17 +191,29 @@ private fun ScreensContent(
                 val fieldId = fieldInfoArgs.fieldId
 
                 val viewModel: FieldInfoViewModel = koinViewModel()
-                val state by viewModel.fieldState.collectAsState()
+                val fieldState by viewModel.fieldState.collectAsState()
+                val expenseEditorState by viewModel.expenseEditorState.collectAsState()
 
                 LaunchedEffect(fieldId) { viewModel.loadDataForField(fieldId) }
 
                 FieldInfoScreen(
-                    state = state,
+                    state = fieldState,
                     onBackClicked = { navController.popBackStack() },
-                    onReloadClicked = { if (state.fieldInfo?.id != null) viewModel.loadDataForField(state.fieldInfo!!.id) },
-                    onOpenExpenseEditor = { TODO() },
-                    onCloseExpenseEditor = { TODO() },
-                    onAddExpense = { TODO() }
+                    onReloadClicked = { if (fieldState.fieldInfo?.id != null) viewModel.loadDataForField(fieldState.fieldInfo!!.id) },
+                    onOpenExpenseEditor = viewModel::openExpenseEditor,
+                )
+                EditExpenseComponent(
+                    state = expenseEditorState,
+                    onDismissRequest = viewModel::closeExpenseEditor,
+                    onUpdateDescription = viewModel::updateExpenseDescription,
+                    onUpdateDate = viewModel::updateExpenseDate,
+                    onUpdateAmount = viewModel::updateExpenseAmount,
+                    onAddExpenseClicked = viewModel::addExpenses,
+                    onUpdateExpenseClicked = viewModel::editExpenses,
+                    onDeleteExpenseClicked = {
+                        if (expenseEditorState.editedExpense != null)
+                            viewModel.removeExpenses(expenseEditorState.editedExpense!!.id)
+                    }
                 )
             }
             composable<ScreenRoutes.EditFieldScreen> { backStackEntry ->

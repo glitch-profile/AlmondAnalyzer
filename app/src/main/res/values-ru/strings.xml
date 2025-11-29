@@ -42,6 +42,28 @@
         <item quantity="other">%d саженцев</item>
     </plurals>
     <string name="field_details_field_expenses_section_title">Затраты</string>
+    <string name="field_details_field_expenses_default_description">Описание отсутствует</string>
+    <string name="field_details_field_expenses_total_text">Общая сумма затрат</string>
+    <string name="field_details_field_no_expenses_text">Затраты для этого поля не найдены</string>
+    <string name="field_details_add_expense_button_label">Добавить операцию</string>
+    <!-- EDIT EXPENSE COMPONENT -->
+    <string name="edit_expense_add_title">Добавление расходов</string>
+    <string name="edit_expense_update_title">Редактирование расходов</string>
+    <string name="edit_expense_description_label">Описание</string>
+    <string name="edit_expense_date_label">Дата платежа</string>
+    <string name="edit_expense_amount_label">Сумма</string>
+    <string name="edit_expense_add_button_label">Сохранить операцию</string>
+    <string name="edit_expense_update_button_label">Обновить операцию</string>
+    <string name="edit_expense_delete_button_label">Удалить</string>
+    <!-- ERRORS -->
+    <string name="edit_expense_error_incorrect_amount_title">Неверная сумма операции</string>
+    <string name="edit_expense_error_incorrect_amount_text">Сумма транзакции не может быть отрицательной</string>
+    <string name="edit_expense_error_incorrect_date_title">Неверный формат даты</string>
+    <string name="edit_expense_error_incorrect_date_text">Неверный формат даты. Дата должна быть в формате "dd.MM.yyyy"</string>
+    <string name="edit_expense_error_date_out_of_range_title">Дата не доступна</string>
+    <string name="edit_expense_error_date_out_of_range_text">Нельзя планировать расходы на будущее</string>
+    <string name="edit_expense_error_unknown_title">Неизвестная ошибка</string>
+    <string name="edit_expense_error_unknown_text">Возникла ошибка во время добавления транзакции</string>
     <!-- EDIT FIELD -->
     <string name="edit_field_add_new_field_button_label">Создать новое поле</string>
     <string name="edit_field_update_field_button_label">Обновить это поле</string>
@@ -61,7 +83,7 @@
     <string name="edit_field_error_empty_fields_text">Пожалуйста, укажите все данные для добавления поля</string>
     <string name="edit_field_error_incorrect_year_text">Год посадки не может быть больше текущего и меньше нуля</string>
     <string name="edit_field_error_incorrect_scheme_text">Невозможно обработать схему посадки деревьев</string>
-    <string name="edit_field_error_unknown_text">Возникла ошибка во время добавления поля.\nКод ошибки:</string>
+    <string name="edit_field_error_unknown_text">Возникла ошибка во время добавления поля</string>
 
 
     <!-- UPLOAD IMAGE SCREEN -->
