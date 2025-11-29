@@ -17,7 +17,7 @@ android {
         minSdk = 29
         targetSdk = 36
         versionCode = 1
-        versionName = "0.1.3"
+        versionName = "0.4.0"
         androidResources.localeFilters.addAll(listOf("en", "ru"))
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
