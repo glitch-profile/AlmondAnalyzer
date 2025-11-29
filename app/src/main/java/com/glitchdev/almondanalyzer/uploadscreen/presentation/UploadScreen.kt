@@ -6,10 +6,9 @@ import android.net.Uri
 import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateDpAsState
-import androidx.compose.animation.expandVertically
-import androidx.compose.animation.shrinkVertically
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.animateIntAsState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -26,11 +25,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
@@ -133,7 +135,11 @@ fun UploadScreen(
             )
         }
         if (cameraWindowHeight != maxScreenHeight) {
-            var bottomMenuHeight by remember { mutableStateOf(0.dp) }
+            var bottomMenuHeight by remember { mutableIntStateOf(0) }
+            val bottomHeightPadding by animateIntAsState(
+                targetValue = if (imagePickerState.selectedImages.isNotEmpty()) bottomMenuHeight else 0,
+                animationSpec = appSpringDefault()
+            )
             val density = LocalDensity.current
             AppTextDivider(
                 modifier = Modifier
@@ -152,7 +158,7 @@ fun UploadScreen(
                 ImagePicker(
                     modifier = Modifier
                         .fillMaxSize(),
-                    contentPadding = PaddingValues(bottom = bottomMenuHeight),
+                    contentPadding = PaddingValues(bottom = with(density) { bottomHeightPadding.toDp() }),
                     state = imagePickerState,
                     onHideTempOnlyWarning = onHideTempOnlyWarning,
                     onRefreshImagesList = onUpdateImagesList,
@@ -166,7 +172,7 @@ fun UploadScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .onSizeChanged { newSize ->
-                            bottomMenuHeight = with(density) { newSize.height.toDp() }
+                            bottomMenuHeight = newSize.height
                         }
                 ) {
                     UploadButtonsMenu(
@@ -186,53 +192,57 @@ private fun UploadButtonsMenu(
     onClearImageSelection: () -> Unit,
     onUploadImages: () -> Unit
 ) {
-    AnimatedVisibility(
-        visible = selectedImages.isNotEmpty(),
-        enter = expandVertically(appSpringDefault()),
-        exit = shrinkVertically(appSpringDefault())
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(AppTheme.size.medium)
-        ) {
-            AppIconButton(
-                modifier = Modifier
-                    .size(48.dp),
-                onClick = onClearImageSelection,
-                shape = AppButtonDefaults.shape(),
-                colors = AppButtonDefaults.textButtonColors(
-                    containerColor = AppTheme.colorScheme.surface.copy(0.8f)
-                )
-            ) {
-                Icon(
-                    imageVector = AppIcons.CloseSquare,
-                    contentDescription = null
-                )
+    var maxHiddenOffset by remember { mutableFloatStateOf(300f) }
+    val offset by animateFloatAsState(
+        if (selectedImages.isNotEmpty()) 0f else maxHiddenOffset,
+        animationSpec = appSpringDefault()
+    )
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .onSizeChanged { size ->
+                maxHiddenOffset = size.height.toFloat()
             }
-            Spacer(Modifier.width(AppTheme.size.medium))
-            AppButton(
-                modifier = Modifier
-                    .height(48.dp)
-                    .weight(1f),
-                enabled = selectedImages.isNotEmpty(),
-                onClick = onUploadImages,
-                shape = AppButtonDefaults.shape()
+            .graphicsLayer {
+                translationY = offset
+            }
+            .padding(AppTheme.size.medium)
+    ) {
+        AppIconButton(
+            modifier = Modifier
+                .size(48.dp),
+            onClick = onClearImageSelection,
+            shape = AppButtonDefaults.shape(),
+            colors = AppButtonDefaults.textButtonColors(
+                containerColor = AppTheme.colorScheme.surface.copy(0.8f)
+            )
+        ) {
+            Icon(
+                imageVector = AppIcons.CloseSquare,
+                contentDescription = null
+            )
+        }
+        Spacer(Modifier.width(AppTheme.size.medium))
+        AppButton(
+            modifier = Modifier
+                .height(48.dp)
+                .weight(1f),
+            enabled = selectedImages.isNotEmpty(),
+            onClick = onUploadImages
+        ) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text(stringResource(R.string.upload_image_import_upload_images_label))
-                    Text(
-                        text = pluralStringResource(
-                            R.plurals.upload_image_import_upload_images_sublabel,
-                            count = selectedImages.size,
-                            selectedImages.size
-                        ),
-                        style = AppTheme.typography.bodyMedium,
-                        color = AppTheme.colorScheme.onPrimaryVariant
-                    )
-                }
+                Text(stringResource(R.string.upload_image_import_upload_images_label))
+                Text(
+                    text = pluralStringResource(
+                        R.plurals.upload_image_import_upload_images_sublabel,
+                        count = selectedImages.size,
+                        selectedImages.size
+                    ),
+                    style = AppTheme.typography.bodyMedium,
+                    color = AppTheme.colorScheme.onPrimaryVariant
+                )
             }
         }
     }

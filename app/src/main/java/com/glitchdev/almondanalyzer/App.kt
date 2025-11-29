@@ -1,9 +1,9 @@
 package com.glitchdev.almondanalyzer
 
 import android.app.Application
-import com.glitchdev.almondanalyzer.core.di.fieldModule
+import com.glitchdev.almondanalyzer.core.di.roomModule
+import com.glitchdev.almondanalyzer.core.di.utilsModule
 import com.glitchdev.almondanalyzer.core.di.viewModelsModule
-import com.glitchdev.almondanalyzer.expenses.di.expenseModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 
@@ -14,9 +14,11 @@ class App: Application() {
             androidContext(this@App)
             modules(
                 listOf(
+                    utilsModule,
+
+                    roomModule,
+
                     viewModelsModule,
-                    fieldModule,
-                    expenseModule,
                 )
             )
         }

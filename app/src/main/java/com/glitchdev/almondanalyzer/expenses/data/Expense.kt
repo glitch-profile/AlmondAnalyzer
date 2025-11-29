@@ -5,9 +5,10 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "expenses")
 data class Expense(
-    @PrimaryKey(autoGenerate = true) val id: Long = 0,
+    @PrimaryKey(autoGenerate = true)
+    val id: Long = 0,
     val date: String,
-    val fieldId: Long,         // 🔗 связь с полем
+    val fieldId: Long,
     val description: String,
     val amount: Double
 )

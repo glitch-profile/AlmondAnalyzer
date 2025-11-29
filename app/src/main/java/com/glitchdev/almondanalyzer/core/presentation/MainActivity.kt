@@ -42,7 +42,18 @@ import androidx.navigation.navigation
 import androidx.navigation.toRoute
 import com.glitchdev.almondanalyzer.core.presentation.navigationbar.NavigationBar
 import com.glitchdev.almondanalyzer.core.utils.ScreenRoutes
+import com.glitchdev.almondanalyzer.fields.presentation.allfields.FieldsScreen
+import com.glitchdev.almondanalyzer.fields.presentation.allfields.FieldsScreenViewModel
+import com.glitchdev.almondanalyzer.fields.presentation.editfield.EditFieldScreen
+import com.glitchdev.almondanalyzer.fields.presentation.editfield.EditFieldViewModel
+import com.glitchdev.almondanalyzer.fields.presentation.fieldinfo.FieldInfoScreen
+import com.glitchdev.almondanalyzer.fields.presentation.fieldinfo.FieldInfoViewModel
+import com.glitchdev.almondanalyzer.fields.presentation.fieldinfo.editexpense.EditExpenseComponent
 import com.glitchdev.almondanalyzer.ui.components.AppSurface
+import com.glitchdev.almondanalyzer.ui.components.notification.NotificationController
+import com.glitchdev.almondanalyzer.ui.components.notification.ObserveAsEvents
+import com.glitchdev.almondanalyzer.ui.components.notification.SwipeableNotification
+import com.glitchdev.almondanalyzer.ui.components.notification.SwipeableNotificationState
 import com.glitchdev.almondanalyzer.ui.theme.AlmondAnalyzerTheme
 import com.glitchdev.almondanalyzer.ui.theme.AppTheme
 import com.glitchdev.almondanalyzer.uploadscreen.presentation.UploadScreen
@@ -115,9 +126,14 @@ class MainActivity : ComponentActivity() {
                             ) {
                                 NavigationBar(
                                     currentNavGraph = currentNavGraph,
-                                    onNavigateToRecentsScreen = {
-                                        navController.navigate(ScreenRoutes.RecentsNavGraph) {
-                                            popUpTo(ScreenRoutes.RecentsNavGraph) { inclusive = true }
+                                    onNavigateToFieldsScreen = {
+                                        navController.navigate(ScreenRoutes.FieldsNavGraph) {
+                                            popUpTo(ScreenRoutes.FieldsNavGraph) { inclusive = true }
+                                        }
+                                    },
+                                    onNavigateToExpensesScreen = {
+                                        navController.navigate(ScreenRoutes.ExpensesNavGraph) {
+                                            popUpTo(ScreenRoutes.ExpensesNavGraph) { inclusive = true }
                                         }
                                     },
                                     onNavigateToAnalyzeScreen = {
@@ -129,6 +145,14 @@ class MainActivity : ComponentActivity() {
                             }
                         }
                     }
+
+                    val swipeableNotificationState = remember {
+                        SwipeableNotificationState()
+                    }
+                    ObserveAsEvents(NotificationController.notificationEvents) { event ->
+                        swipeableNotificationState.showNotification(event)
+                    }
+                    SwipeableNotification(swipeableNotificationState)
                 }
             }
         }
@@ -139,7 +163,7 @@ class MainActivity : ComponentActivity() {
 private fun ScreensContent(
     navController: NavHostController
 ) {
-    val startDestination = ScreenRoutes.RecentsNavGraph
+    val startDestination = ScreenRoutes.FieldsNavGraph
 
     NavHost(
         modifier = Modifier
@@ -147,11 +171,87 @@ private fun ScreensContent(
         navController = navController,
         startDestination = startDestination
     ) {
-        navigation<ScreenRoutes.RecentsNavGraph>(startDestination = ScreenRoutes.RecentImagesScreen) {
-            composable<ScreenRoutes.RecentImagesScreen> {
+        navigation<ScreenRoutes.FieldsNavGraph>(startDestination = ScreenRoutes.AllFieldsScreen) {
+            composable<ScreenRoutes.AllFieldsScreen> {
+                val viewModel: FieldsScreenViewModel = koinViewModel()
+                val state by viewModel.fieldsState.collectAsState()
+                FieldsScreen(
+                    state = state,
+                    onUpdateFieldsInfo = viewModel::loadFields,
+                    onSelectField = { viewModel.selectField(it) },
+                    onUnselectField = { viewModel.selectField(null) },
+                    onOpenFieldInfoClicked = { navController.navigate(ScreenRoutes.FieldInfoScreen(it)) },
+                    onAddNewFieldClicked = { navController.navigate(ScreenRoutes.EditFieldScreen(null)) },
+                    onEditFieldClicked = { navController.navigate(ScreenRoutes.EditFieldScreen(it)) },
+                    onDeleteFieldClicked = viewModel::deleteField
+                )
+            }
+            composable<ScreenRoutes.FieldInfoScreen> { backStackEntry ->
+                val fieldInfoArgs: ScreenRoutes.FieldInfoScreen = backStackEntry.toRoute()
+                val fieldId = fieldInfoArgs.fieldId
+
+                val viewModel: FieldInfoViewModel = koinViewModel()
+                val fieldState by viewModel.fieldState.collectAsState()
+                val expenseEditorState by viewModel.expenseEditorState.collectAsState()
+
+                LaunchedEffect(fieldId) { viewModel.loadDataForField(fieldId) }
+
+                FieldInfoScreen(
+                    state = fieldState,
+                    onBackClicked = { navController.popBackStack() },
+                    onReloadClicked = { if (fieldState.fieldInfo?.id != null) viewModel.loadDataForField(fieldState.fieldInfo!!.id) },
+                    onOpenExpenseEditor = viewModel::openExpenseEditor,
+                )
+                EditExpenseComponent(
+                    state = expenseEditorState,
+                    onDismissRequest = viewModel::closeExpenseEditor,
+                    onUpdateDescription = viewModel::updateExpenseDescription,
+                    onUpdateDate = viewModel::updateExpenseDate,
+                    onUpdateAmount = viewModel::updateExpenseAmount,
+                    onAddExpenseClicked = viewModel::addExpenses,
+                    onUpdateExpenseClicked = viewModel::editExpenses,
+                    onDeleteExpenseClicked = {
+                        if (expenseEditorState.editedExpense != null)
+                            viewModel.removeExpenses(expenseEditorState.editedExpense!!.id)
+                    }
+                )
+            }
+            composable<ScreenRoutes.EditFieldScreen> { backStackEntry ->
+                val editFieldScreenArgs: ScreenRoutes.EditFieldScreen = backStackEntry.toRoute()
+                val fieldId = editFieldScreenArgs.fieldId
+
+                val viewModel: EditFieldViewModel = koinViewModel()
+                val state by viewModel.state.collectAsState()
+
+                LaunchedEffect(fieldId) {
+                    viewModel.loadFieldData(fieldId)
+                }
+                EditFieldScreen(
+                    state = state,
+                    onNameChange = viewModel::updateName,
+                    onVarietyChange = viewModel::updateVariety,
+                    onCadastralNumberChange = viewModel::updateCadastralNumber,
+                    onPlantingYearChange = viewModel::updatePlantingYear,
+                    onAddRow = viewModel::addSeedlingsRow,
+                    onEditRow = viewModel::editSeedlingCountForRow,
+                    onRemoveRow = viewModel::removeSeedlingsRow,
+                    onBackClicked = { navController.popBackStack() },
+                    onUpdateFieldClicked = { viewModel.updateField {  } },
+                    onAddFieldClicked = { viewModel.addField {  } },
+                    onResetToDefaults = viewModel::resetToDefault
+                )
+            }
+        }
+        navigation<ScreenRoutes.ExpensesNavGraph>(startDestination = ScreenRoutes.ExpensesScreen) {
+            composable<ScreenRoutes.ExpensesScreen> {
 
             }
         }
+//        navigation<ScreenRoutes.RecentsNavGraph>(startDestination = ScreenRoutes.RecentImagesScreen) {
+//            composable<ScreenRoutes.RecentImagesScreen> {
+//
+//            }
+//        }
         navigation<ScreenRoutes.AnalyzeImageNavGraph>(startDestination = ScreenRoutes.UploadImageScreen) {
             composable<ScreenRoutes.UploadImageScreen> {
                 val uploadScreenViewModel: UploadScreenViewModel = koinViewModel()

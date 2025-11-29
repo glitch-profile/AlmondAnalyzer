@@ -32,14 +32,17 @@ import com.glitchdev.almondanalyzer.core.utils.ScreenRoutes
 import com.glitchdev.almondanalyzer.ui.icons.AppIcons
 import com.glitchdev.almondanalyzer.ui.icons.svgs.Ai
 import com.glitchdev.almondanalyzer.ui.icons.svgs.AiFilled
-import com.glitchdev.almondanalyzer.ui.icons.svgs.Recents
-import com.glitchdev.almondanalyzer.ui.icons.svgs.RecentsFilled
+import com.glitchdev.almondanalyzer.ui.icons.svgs.Leaf
+import com.glitchdev.almondanalyzer.ui.icons.svgs.LeafFill
+import com.glitchdev.almondanalyzer.ui.icons.svgs.Schedule
+import com.glitchdev.almondanalyzer.ui.icons.svgs.ScheduleFill
 import com.glitchdev.almondanalyzer.ui.theme.AppTheme
 
 @Composable
 fun NavigationBar(
     currentNavGraph: NavGraph?,
-    onNavigateToRecentsScreen: () -> Unit,
+    onNavigateToFieldsScreen: () -> Unit,
+    onNavigateToExpensesScreen: () -> Unit,
     onNavigateToAnalyzeScreen: () -> Unit
 ) {
     Row(
@@ -49,13 +52,22 @@ fun NavigationBar(
     ) {
         NavigationItem(
             modifier = Modifier.weight(1f),
-            title = stringResource(R.string.recents_screen_title),
-            defaultIcon = AppIcons.Recents,
-            selectedIcon = AppIcons.RecentsFilled,
+            title = stringResource(R.string.fields_screen_title),
+            defaultIcon = AppIcons.Leaf,
+            selectedIcon = AppIcons.LeafFill,
             isSelected = currentNavGraph
-                ?.hasRoute(ScreenRoutes.RecentsNavGraph::class) == true,
-            onClick = onNavigateToRecentsScreen
+                ?.hasRoute(ScreenRoutes.FieldsNavGraph::class) == true,
+            onClick = onNavigateToFieldsScreen
         )
+//        NavigationItem(
+//            modifier = Modifier.weight(1f),
+//            title = stringResource(R.string.expenses_screen_title),
+//            defaultIcon = AppIcons.Schedule,
+//            selectedIcon = AppIcons.ScheduleFill,
+//            isSelected = currentNavGraph
+//                ?.hasRoute(ScreenRoutes.ExpensesNavGraph::class) == true,
+//            onClick = onNavigateToExpensesScreen
+//        )
         NavigationItem(
             modifier = Modifier.weight(1f),
             title = stringResource(R.string.analyze_screen_title),
