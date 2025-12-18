@@ -58,6 +58,8 @@ import com.glitchdev.almondanalyzer.ui.theme.AlmondAnalyzerTheme
 import com.glitchdev.almondanalyzer.ui.theme.AppTheme
 import com.glitchdev.almondanalyzer.uploadscreen.presentation.UploadScreen
 import com.glitchdev.almondanalyzer.uploadscreen.presentation.UploadScreenViewModel
+import com.glitchdev.almondanalyzer.workscreen.presentation.WorkScreen
+import com.glitchdev.almondanalyzer.workscreen.presentation.WorkScreenViewModel
 import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalLayoutApi::class)
@@ -131,9 +133,9 @@ class MainActivity : ComponentActivity() {
                                             popUpTo(ScreenRoutes.FieldsNavGraph) { inclusive = true }
                                         }
                                     },
-                                    onNavigateToExpensesScreen = {
-                                        navController.navigate(ScreenRoutes.ExpensesNavGraph) {
-                                            popUpTo(ScreenRoutes.ExpensesNavGraph) { inclusive = true }
+                                    onNavigateToWorksScreen = {
+                                        navController.navigate(ScreenRoutes.WorksNavGraph) {
+                                            popUpTo(ScreenRoutes.WorksNavGraph) { inclusive = true }
                                         }
                                     },
                                     onNavigateToAnalyzeScreen = {
@@ -242,16 +244,13 @@ private fun ScreensContent(
                 )
             }
         }
-        navigation<ScreenRoutes.ExpensesNavGraph>(startDestination = ScreenRoutes.ExpensesScreen) {
-            composable<ScreenRoutes.ExpensesScreen> {
-
+        navigation<ScreenRoutes.WorksNavGraph>(startDestination = ScreenRoutes.WorksScreen) {
+            composable<ScreenRoutes.WorksScreen> {
+                val viewModel: WorkScreenViewModel = koinViewModel()
+                // все переменные из view model передаются в экран тут
+                WorkScreen()
             }
         }
-//        navigation<ScreenRoutes.RecentsNavGraph>(startDestination = ScreenRoutes.RecentImagesScreen) {
-//            composable<ScreenRoutes.RecentImagesScreen> {
-//
-//            }
-//        }
         navigation<ScreenRoutes.AnalyzeImageNavGraph>(startDestination = ScreenRoutes.UploadImageScreen) {
             composable<ScreenRoutes.UploadImageScreen> {
                 val uploadScreenViewModel: UploadScreenViewModel = koinViewModel()

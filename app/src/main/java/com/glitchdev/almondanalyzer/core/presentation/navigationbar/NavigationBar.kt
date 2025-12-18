@@ -42,7 +42,7 @@ import com.glitchdev.almondanalyzer.ui.theme.AppTheme
 fun NavigationBar(
     currentNavGraph: NavGraph?,
     onNavigateToFieldsScreen: () -> Unit,
-    onNavigateToExpensesScreen: () -> Unit,
+    onNavigateToWorksScreen: () -> Unit,
     onNavigateToAnalyzeScreen: () -> Unit
 ) {
     Row(
@@ -59,15 +59,15 @@ fun NavigationBar(
                 ?.hasRoute(ScreenRoutes.FieldsNavGraph::class) == true,
             onClick = onNavigateToFieldsScreen
         )
-//        NavigationItem(
-//            modifier = Modifier.weight(1f),
-//            title = stringResource(R.string.expenses_screen_title),
-//            defaultIcon = AppIcons.Schedule,
-//            selectedIcon = AppIcons.ScheduleFill,
-//            isSelected = currentNavGraph
-//                ?.hasRoute(ScreenRoutes.ExpensesNavGraph::class) == true,
-//            onClick = onNavigateToExpensesScreen
-//        )
+        NavigationItem(
+            modifier = Modifier.weight(1f),
+            title = stringResource(R.string.works_screen_title),
+            defaultIcon = AppIcons.Schedule,
+            selectedIcon = AppIcons.ScheduleFill,
+            isSelected = currentNavGraph
+                ?.hasRoute(ScreenRoutes.WorksNavGraph::class) == true,
+            onClick = onNavigateToWorksScreen
+        )
         NavigationItem(
             modifier = Modifier.weight(1f),
             title = stringResource(R.string.analyze_screen_title),

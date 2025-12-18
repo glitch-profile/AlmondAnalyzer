@@ -9,8 +9,8 @@ object ScreenRoutes {
     @Serializable data class FieldInfoScreen(val fieldId: Long)
     @Serializable data class EditFieldScreen(val fieldId: Long?)
 
-    @Serializable object ExpensesNavGraph
-    @Serializable object ExpensesScreen
+    @Serializable object WorksNavGraph
+    @Serializable object WorksScreen
 
     @Serializable object RecentsNavGraph
     @Serializable object RecentImagesScreen
